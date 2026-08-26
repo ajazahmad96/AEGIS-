@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from google import genai
+from google.genai import types
 
 app = Flask(__name__)
 
@@ -31,14 +32,14 @@ def ask_gemini():
         5. Conciseness: Direct, impactful, and structured answers only.
         """
 
-        # Latest Gemini 3.6 Flash Model Request with System Instructions
+        # Latest Gemini Model Request with Correct Types Config
         response = client.models.generate_content(
             model='gemini-3.6-flash',
             contents=user_message,
-            config={
-                'system_instruction': system_instruction,
-                'temperature': 0.7
-            }
+            config=types.GenerateContentConfig(
+                system_instruction=system_instruction,
+                temperature=0.7
+            )
         )
 
         return jsonify({"reply": response.text})
