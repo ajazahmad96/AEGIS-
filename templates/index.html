@@ -163,6 +163,69 @@
             height: 18px;
             fill: white;
         }
+
+/* Normal text soft grey for less eye strain */
+.bot-message {
+    color: #cbd5e1;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* Bold text highlight (Bright White) */
+.bot-message strong, .bot-message b {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* Headings with Neon Cyan color */
+.bot-message h1, .bot-message h2, .bot-message h3 {
+    color: #38bdf8;
+    margin-top: 16px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.bot-message h1 { font-size: 1.4em; }
+.bot-message h2 { font-size: 1.25em; }
+.bot-message h3 { font-size: 1.1em; }
+
+/* Dark Code Blocks styling */
+.bot-message pre {
+    background-color: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 12px 0;
+}
+
+/* Inline code tags (Subtle Purple) */
+.bot-message code {
+    font-family: 'Courier New', Courier, monospace;
+    color: #a78bfa; 
+    background-color: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Clear background for code inside pre blocks */
+.bot-message pre code {
+    color: #e2e8f0;
+    background-color: transparent;
+    padding: 0;
+}
+
+/* List spacing so bullets don't mix */
+.bot-message ul, .bot-message ol {
+    margin-left: 20px;
+    margin-bottom: 15px;
+}
+
+.bot-message li {
+    margin-bottom: 8px;
+}
+
     </style>
 </head>
 <body>
