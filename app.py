@@ -1,13 +1,11 @@
 from flask import Flask, render_template, request, jsonify
-import google.generativeai as genai
+import urllib.request
+import json
 
 app = Flask(__name__)
 
 # Aapki Gemini API Key
 API_KEY = "AQ.Ab8RNSiYMosIUqVhjYK5pdrUoqjk94Fk0fJP6QPmw6gJVE1WNg"
-
-# Configure standard GenAI library
-genai.configure(api_key=API_KEY)
 
 @app.route('/')
 def home():
@@ -18,22 +16,36 @@ def ask_gemini():
     try:
         user_message = request.json.get('message', '')
         
-        # System Instructions + Persona Prompt combined for stable model
-        prompt = f"""
-        You are AEGIS, an advanced, highly intelligent, and friendly AI assistant.
-        Provide exceptionally clear, accurate, and beautifully formatted responses like ChatGPT and Google Gemini.
-        - Structure responses using bold headers, clean bullet points, and code blocks.
-        - Respond in natural Hinglish if asked in Hinglish/Hindi, and call the user Mr. Ajaz.
+        # System instructions + User message combined for REST API
+        prompt_text = f"""
+        You are AEGIS, an advanced, highly intelligent, and friendly AI assistant for Mr. Ajaz.
+        - Provide structured, clear responses using bold headers and bullet points.
+        - Respond in natural Hinglish if asked in Hinglish.
         - Format math equations using LaTeX notation ($ inline $ or $$ display $$).
         
-        User Question: {user_message}
+        User: {user_message}
         """
 
-        # Stable model call using standard library
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        response = model.generate_content(prompt)
-
-        return jsonify({"reply": response.text})
+        # Direct Google Gemini API URL for gemini-1.5-flash
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}"
+        
+        payload = {
+            "contents": [{
+                "parts": [{"text": prompt_text}]
+            }]
+        }
+        
+        req = urllib.request.Request(
+            url,
+            data=json.dumps(payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'},
+            method='POST'
+        )
+        
+        with urllib.request.urlopen(req) as response:
+            res_data = json.loads(response.read().decode('utf-8'))
+            reply_text = res_data['candidates'][0]['content']['parts'][0]['text']
+            return jsonify({"reply": reply_text})
 
     except Exception as e:
         return jsonify({"reply": f"AEGIS Error: {str(e)}"}), 500
