@@ -191,55 +191,65 @@
         </div>
     </div>
 
-    <script>
-        const chatContainer = document.getElementById('chatContainer');
-        const userInput = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
+   <script>
+    const chatContainer = document.getElementById('chatContainer');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
 
-        async function sendMessage() {
-            const message = userInput.value.trim();
-            if (!message) return;
+    async function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
 
-            // 1. Render User Message
-            const userDiv = document.createElement('div');
-            userDiv.className = 'message user-message';
-            userDiv.textContent = message;
-            chatContainer.appendChild(userDiv);
+        // 1. Render User Message
+        const userDiv = document.createElement('div');
+        userDiv.className = 'message user-message';
+        userDiv.textContent = message;
+        chatContainer.appendChild(userDiv);
 
-            userInput.value = '';
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        userInput.value = '';
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // 2. Render Temporary Bot Loader
-            const botDiv = document.createElement('div');
-            botDiv.className = 'message bot-message';
-            botDiv.textContent = 'AEGIS is thinking...';
-            chatContainer.appendChild(botDiv);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        // 2. Render Temporary Bot Loader
+        const botDiv = document.createElement('div');
+        botDiv.className = 'message bot-message';
+        botDiv.textContent = 'AEGIS is thinking...';
+        chatContainer.appendChild(botDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            try {
-                // 3. Request to Pydroid Flask Backend
-                const response = await fetch('/ask', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
-                });
+        try {
+            // 3. Request to Backend
+            const response = await fetch('/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
 
-                const data = await response.json();
-                botDiv.textContent = data.reply;
-            } catch (error) {
-                botDiv.textContent = 'Error: Server connect nahi ho saka.';
-            }
+            const data = await response.json();
+            
+            // Markdown & Math Formatting Apply Karo
+            botDiv.innerHTML = marked.parse(data.reply);
+            renderMathInElement(botDiv, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
 
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+        } catch (error) {
+            botDiv.textContent = 'Error: Server connect nahi ho saka.';
         }
 
-        sendBtn.addEventListener('click', sendMessage);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
-        userInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-    </script>
+    sendBtn.addEventListener('click', sendMessage);
+
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+</script>
+
 </body>
 </html>
