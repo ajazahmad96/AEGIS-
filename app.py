@@ -18,9 +18,9 @@ def ask_gemini():
     try:
         user_message = request.json.get('message', '')
         
-        # Latest Gemini 2.5 Flash Model Request
+        # Latest Gemini 3.6 Flash Model Request
         response = client.models.generate_content(
-            model='gemini-2.5-flash',
+            model='gemini-3.6-flash',
             contents=user_message
         )
         
