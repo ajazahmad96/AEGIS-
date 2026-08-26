@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AEGIS AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            background-color: #090B10; /* PULSE Pure Black */
+            color: #FFFFFF;
+            overflow: hidden;
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100dvh; /* Dynamic Viewport Height - Keyboard auto-adjust Fix */
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Fixed Top Header */
+        .chat-header {
+            padding: 14px 20px;
+            background-color: #090B10;
+            border-bottom: 1px solid #161D2A;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .brand-title span {
+            color: #00D2FF; /* Electric Cyan */
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #111723;
+            padding: 5px 10px;
+            border-radius: 20px;
+            border: 1px solid #161D2A;
+            font-size: 0.75rem;
+            color: #8E9BAE;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #00E676; /* Neon Green */
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00E676;
+        }
+
+        /* Scrollable Chat Area */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* User Message (Boxed Style) */
+        .user-message {
+            background-color: #161D2A;
+            color: #FFFFFF;
+            align-self: flex-end;
+            padding: 12px 16px;
+            border-radius: 16px;
+            border-bottom-right-radius: 4px;
+            max-width: 82%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* AEGIS Bot Response (Clean Pure Background Text) */
+        .bot-message {
+            background: transparent;
+            color: #E2E8F0;
+            align-self: flex-start;
+            padding: 4px 6px;
+            max-width: 95%;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        /* Bottom Fixed Input Bar */
+        .input-container {
+            padding: 12px 16px;
+            background-color: #090B10;
+            border-top: 1px solid #161D2A;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .input-box {
+            flex: 1;
+            background-color: #161D2A;
+            border: 1px solid #202B3D;
+            color: #FFFFFF;
+            padding: 12px 16px;
+            border-radius: 24px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .input-box:focus {
+            border-color: #00D2FF;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #00D2FF 0%, #0082FF 100%);
+            color: #FFFFFF;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0, 210, 255, 0.3);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .send-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- Header -->
+        <div class="chat-header">
+            <h1 class="brand-title">AEGIS <span>AI</span></h1>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                <span>Ready</span>
+            </div>
+        </div>
+
+        <!-- Dynamic Chat Window -->
+        <div class="chat-container" id="chatContainer"></div>
+
+        <!-- Fixed Input Area -->
+        <div class="input-container">
+            <input type="text" id="userInput" class="input-box" placeholder="Ask AEGIS..." autocomplete="off">
+            <button id="sendBtn" class="send-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // 1. Render User Message
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = message;
+            chatContainer.appendChild(userDiv);
+
+            userInput.value = '';
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 2. Render Temporary Bot Loader
+            const botDiv = document.createElement('div');
+            botDiv.className = 'message bot-message';
+            botDiv.textContent = 'AEGIS is thinking...';
+            chatContainer.appendChild(botDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                // 3. Request to Pydroid Flask Backend
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                botDiv.textContent = data.reply;
+            } catch (error) {
+                botDiv.textContent = 'Error: Server connect nahi ho saka.';
+            }
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
