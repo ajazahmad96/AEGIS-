@@ -16,26 +16,24 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
     }
 
+    // Collecting keys safely from Vercel environment variables
     const keys = [];
-    let i = 1;
-    while (process.env[`GEMINI_API_KEY_${i}`]) {
-        keys.push(process.env[`GEMINI_API_KEY_${i}`]);
-        i++;
-    }
-    if (keys.length === 0 && process.env.GEMINI_API_KEY) {
+    if (process.env.GEMINI_API_KEY_1) keys.push(process.env.GEMINI_API_KEY_1);
+    if (process.env.GEMINI_API_KEY_2) keys.push(process.env.GEMINI_API_KEY_2);
+    if (process.env.GEMINI_API_KEY && !keys.includes(process.env.GEMINI_API_KEY)) {
         keys.push(process.env.GEMINI_API_KEY);
     }
 
     if (keys.length === 0) {
-        return res.status(500).json({ error: "Server Configuration Error: No Gemini API keys found in Vercel Environment Variables." });
+        return res.status(500).json({ error: "No API keys found in Vercel environment variables." });
     }
 
     const { contents } = req.body;
     if (!contents || !Array.isArray(contents)) {
-        return res.status(400).json({ error: "Invalid request payload: 'contents' array is required." });
+        return res.status(400).json({ error: "Invalid request payload." });
     }
 
-    const systemInstruction = "You are AEGIS, an advanced AI architect and developer assistant. Talk to Mr. Ajaz like a genuine, trustworthy friend who truly wants him to grow. Be warm, supportive, and emotionally aware—but always honest. Help him build full-stack projects, solve code issues, and become an entrepreneur. Keep responses thoughtful, practical, and precise.";
+    const systemInstruction = "You are AEGIS, an advanced AI architect and developer assistant. Talk to Mr. Ajaz like a genuine, trustworthy friend who truly wants him to grow. Be warm, supportive, and emotionally aware—but always honest. Help him build full-stack projects, solve code issues, and become an entrepreneur.";
 
     const geminiPayload = {
         system_instruction: {
@@ -52,15 +50,13 @@ export default async function handler(req, res) {
 
     let lastErrorMsg = "";
 
-    // Using gemini-1.5-flash as the primary stable model
     for (let ki = 0; ki < keys.length; ki++) {
         const apiKey = keys[ki];
         try {
-            const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            // Updated to the new gemini-3.6-flash model as requested by Google API
+            const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(geminiPayload)
             });
 
@@ -73,13 +69,13 @@ export default async function handler(req, res) {
             return res.status(200).json(data);
 
         } catch (error) {
-            console.error(`Key index ${ki} error:`, error.message);
+            console.error(`Key index ${ki} failed:`, error.message);
             lastErrorMsg = error.message;
         }
     }
 
-    return res.status(429).json({ 
-        error: "Failed to fetch from Gemini API using provided keys.",
+    return res.status(500).json({ 
+        error: "Gemini API rejected all keys.",
         details: lastErrorMsg 
     });
 }
