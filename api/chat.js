@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-    // CORS headers allow karne ke liye
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -17,7 +16,6 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
     }
 
-    // Environment variables se API keys lena (Supports GEMINI_API_KEY_1, GEMINI_API_KEY_2 or GEMINI_API_KEY)
     const keys = [];
     let i = 1;
     while (process.env[`GEMINI_API_KEY_${i}`]) {
@@ -39,7 +37,6 @@ export default async function handler(req, res) {
 
     const systemInstruction = "You are AEGIS, an advanced AI architect and developer assistant. Talk to Mr. Ajaz like a genuine, trustworthy friend who truly wants him to grow. Be warm, supportive, and emotionally aware—but always honest. Help him build full-stack projects, solve code issues, and become an entrepreneur. Keep responses thoughtful, practical, and precise.";
 
-    // Payload format for Gemini v1beta API
     const geminiPayload = {
         system_instruction: {
             parts: [{ text: systemInstruction }]
@@ -53,14 +50,13 @@ export default async function handler(req, res) {
         }
     };
 
-    let lastError = null;
+    let lastErrorMsg = "";
 
-    // Failover loop across available API keys
+    // Using gemini-1.5-flash as the primary stable model
     for (let ki = 0; ki < keys.length; ki++) {
         const apiKey = keys[ki];
         try {
-            // Direct REST API call to Google Gemini (No external SDK dependency issues)
-            const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+            const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -71,21 +67,19 @@ export default async function handler(req, res) {
             const data = await apiResponse.json();
 
             if (!apiResponse.ok) {
-                throw new Error(data.error?.message || `Gemini API error status: ${apiResponse.status}`);
+                throw new Error(data.error?.message || `API status: ${apiResponse.status}`);
             }
 
-            // Success response
             return res.status(200).json(data);
 
         } catch (error) {
-            console.warn(`API Key index ${ki} failed. Trying next... Error:`, error.message);
-            lastError = error;
+            console.error(`Key index ${ki} error:`, error.message);
+            lastErrorMsg = error.message;
         }
     }
 
-    // If all keys fail
     return res.status(429).json({ 
-        error: "All available API keys are exhausted or rate-limited.",
-        details: lastError ? lastError.message : "Unknown error"
+        error: "Failed to fetch from Gemini API using provided keys.",
+        details: lastErrorMsg 
     });
 }
