@@ -204,51 +204,28 @@
         </div>
     </div>
 
-    <script>
-    // ==========================================
-    // AEGIS FRONTEND
-    // Streaming Gemini Response
-    // ==========================================
-
+   <script>
     // Initialize Icons
     lucide.createIcons();
 
     // Vercel Backend API
     const MODEL_URL = "/api/chat";
 
-
-    // ==========================================
-    // AEGIS SYSTEM PERSONA
-    // ==========================================
-
+    // AEGIS System Persona
     const SYSTEM_INSTRUCTION = `You are AEGIS, an advanced, highly intelligent AI web application.
-
-Your primary user and creator is Mr. Ajaz. You must always address him respectfully as 'Mr. Ajaz'.
-
+Your primary user and creator is Mr. Ajaz.
+You must always address him respectfully as 'Mr. Ajaz'.
 You communicate fluently in Hinglish (a natural mix of Hindi and English).
-
 Your tone is that of a warm, supportive, emotionally aware friend who truly wants him to grow, but you are also highly intelligent and analytical.
-
 You don't just agree; you challenge his thinking when needed and explain why.
-
 Structure your technical answers beautifully using Markdown (bolding, headers, code blocks).
-
-Whenever explaining mathematics, physics, or data science, rigorously use LaTeX formatting using $ for inline math and $$ for block math.
-
+Whenever explaining mathematics, physics, or data science, rigorously use LaTeX formatting (use $ for inline math and $$ for block math).
 Be concise but extremely thorough in logic.`;
 
-
-    // ==========================================
-    // STATE
-    // ==========================================
-
+    // State Management
     let conversationHistory = [];
 
-
-    // ==========================================
-    // UI ELEMENTS
-    // ==========================================
-
+    // UI Elements
     const uiElements = {
         form: document.getElementById("chat-form"),
         input: document.getElementById("user-input"),
@@ -259,11 +236,7 @@ Be concise but extremely thorough in logic.`;
         chatContainer: document.getElementById("chat-container")
     };
 
-
-    // ==========================================
-    // TEXTAREA AUTO RESIZE
-    // ==========================================
-
+    // Auto-resize textarea
     uiElements.input.addEventListener("input", function () {
         this.style.height = "auto";
         this.style.height = this.scrollHeight + "px";
@@ -273,16 +246,10 @@ Be concise but extremely thorough in logic.`;
         }
     });
 
-
-    // ==========================================
-    // ENTER TO SEND
-    // SHIFT + ENTER = NEW LINE
-    // ==========================================
-
+    // Enter to send
+    // Shift + Enter = new line
     uiElements.input.addEventListener("keydown", function (e) {
-
         if (e.key === "Enter" && !e.shiftKey) {
-
             e.preventDefault();
 
             if (this.value.trim()) {
@@ -293,13 +260,8 @@ Be concise but extremely thorough in logic.`;
         }
     });
 
-
-    // ==========================================
-    // SUGGESTION BUTTON
-    // ==========================================
-
+    // Suggestion buttons
     window.setInput = function (text) {
-
         uiElements.input.value = text;
 
         uiElements.input.dispatchEvent(
@@ -311,44 +273,73 @@ Be concise but extremely thorough in logic.`;
         );
     };
 
+    // Delay helper
+    const delay = ms =>
+        new Promise(resolve => setTimeout(resolve, ms));
 
-    // ==========================================
-    // SCROLL
-    // ==========================================
+    // Fetch Gemini response through Vercel
+    async function fetchWithRetry(payload, maxRetries = 5) {
+        const delays = [
+            1000,
+            2000,
+            4000,
+            8000,
+            16000
+        ];
 
-    function scrollToBottom() {
+        for (let i = 0; i <= maxRetries; i++) {
+            try {
+                const response = await fetch(MODEL_URL, {
+                    method: "POST",
 
-        uiElements.chatContainer.scrollTo({
-            top: uiElements.chatContainer.scrollHeight,
-            behavior: "smooth"
-        });
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data?.error ||
+                        `HTTP error! status: ${response.status}`
+                    );
+                }
+
+                return data;
+
+            } catch (error) {
+                console.error(
+                    `Attempt ${i + 1} failed:`,
+                    error
+                );
+
+                if (i === maxRetries) {
+                    throw error;
+                }
+
+                await delay(delays[i]);
+            }
+        }
     }
 
-
-    // ==========================================
-    // MARKDOWN
-    // ==========================================
-
+    // Render Markdown
     function formatContent(text) {
-
         const rawHtml = marked.parse(text);
 
-        const cleanHtml = DOMPurify.sanitize(rawHtml);
+        const cleanHtml =
+            DOMPurify.sanitize(rawHtml);
 
         return cleanHtml;
     }
 
-
-    // ==========================================
-    // KATEX
-    // ==========================================
-
+    // Render LaTeX
     function applyKaTeX(element) {
-
         if (!element) return;
 
         renderMathInElement(element, {
-
             delimiters: [
                 {
                     left: "$$",
@@ -376,23 +367,27 @@ Be concise but extremely thorough in logic.`;
         });
     }
 
+    // Append message
+    function appendMessage(role, text) {
+        uiElements.welcomeScreen.classList.add(
+            "hidden"
+        );
 
-    // ==========================================
-    // CREATE MESSAGE ELEMENT
-    // ==========================================
-
-    function createMessageElement(role) {
-
-        uiElements.welcomeScreen.classList.add("hidden");
-        uiElements.messagesWrapper.classList.remove("hidden");
+        uiElements.messagesWrapper.classList.remove(
+            "hidden"
+        );
 
         const isUser = role === "user";
 
-        const msgDiv = document.createElement("div");
+        const msgDiv =
+            document.createElement("div");
 
         msgDiv.className =
-            `msg-container ${isUser ? "msg-user" : "msg-ai"}`;
-
+            `msg-container ${
+                isUser
+                    ? "msg-user"
+                    : "msg-ai"
+            }`;
 
         const avatarHtml = isUser
 
@@ -408,7 +403,6 @@ Be concise but extremely thorough in logic.`;
                 </div>
               `;
 
-
         msgDiv.innerHTML = `
             <div class="msg-content">
 
@@ -416,317 +410,74 @@ Be concise but extremely thorough in logic.`;
 
                 <div class="flex-1 w-full overflow-hidden pt-1">
 
-                    <div class="prose prose-invert max-w-none text-gray-200 markdown-body"></div>
+                    <div class="prose prose-invert max-w-none text-gray-200 markdown-body">
+                        ${
+                            isUser
+                                ? DOMPurify
+                                    .sanitize(text)
+                                    .replace(
+                                        /\n/g,
+                                        "<br>"
+                                    )
+                                : formatContent(text)
+                        }
+                    </div>
 
                 </div>
 
             </div>
         `;
 
-
-        uiElements.messagesWrapper.appendChild(msgDiv);
-
+        uiElements.messagesWrapper.appendChild(
+            msgDiv
+        );
 
         // Initialize icons
         lucide.createIcons({
             root: msgDiv
         });
 
-
-        return msgDiv;
-    }
-
-
-    // ==========================================
-    // APPEND NORMAL MESSAGE
-    // ==========================================
-
-    function appendMessage(role, text) {
-
-        const msgDiv = createMessageElement(role);
-
-        const contentElement =
-            msgDiv.querySelector(".markdown-body");
-
-
-        if (role === "user") {
-
-            contentElement.innerHTML =
-                DOMPurify
-                    .sanitize(text)
-                    .replace(/\n/g, "<br>");
-
-        } else {
-
-            contentElement.innerHTML =
-                formatContent(text);
-
-            applyKaTeX(contentElement);
+        // Apply LaTeX
+        if (!isUser) {
+            applyKaTeX(
+                msgDiv.querySelector(
+                    ".markdown-body"
+                )
+            );
         }
 
-
-        scrollToBottom();
-
-        return msgDiv;
-    }
-
-
-    // ==========================================
-    // CREATE STREAMING AI MESSAGE
-    // ==========================================
-
-    function createStreamingMessage() {
-
-        const msgDiv =
-            createMessageElement("model");
-
-
-        const contentElement =
-            msgDiv.querySelector(".markdown-body");
-
-
-        contentElement.innerHTML = `
-            <span class="streaming-cursor">▌</span>
-        `;
-
-
-        return {
-            msgDiv,
-            contentElement
-        };
-    }
-
-
-    // ==========================================
-    // UPDATE STREAMING MESSAGE
-    // ==========================================
-
-    function updateStreamingMessage(element, text) {
-
-        element.innerHTML =
-            formatContent(text) +
-            `<span class="streaming-cursor">▌</span>`;
-
         scrollToBottom();
     }
 
+    // Scroll chat to bottom
+    function scrollToBottom() {
+        uiElements.chatContainer.scrollTo({
+            top:
+                uiElements.chatContainer
+                    .scrollHeight,
 
-    // ==========================================
-    // FINISH STREAMING MESSAGE
-    // ==========================================
-
-    function finishStreamingMessage(element, text) {
-
-        element.innerHTML =
-            formatContent(text);
-
-        applyKaTeX(element);
-
-        scrollToBottom();
-    }
-
-
-    // ==========================================
-    // READ GEMINI SSE STREAM
-    // ==========================================
-
-    async function streamResponse(payload, onChunk) {
-
-        const response = await fetch(MODEL_URL, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "text/event-stream"
-            },
-
-            body: JSON.stringify(payload)
+            behavior: "smooth"
         });
-
-
-        // Server error
-        if (!response.ok) {
-
-            let errorMessage =
-                `HTTP error: ${response.status}`;
-
-            try {
-
-                const errorData =
-                    await response.json();
-
-                if (errorData?.error) {
-                    errorMessage = errorData.error;
-                }
-
-            } catch (e) {
-
-                // Ignore JSON parsing error
-            }
-
-            throw new Error(errorMessage);
-        }
-
-
-        if (!response.body) {
-            throw new Error(
-                "No streaming response received from server."
-            );
-        }
-
-
-        const reader =
-            response.body.getReader();
-
-
-        const decoder =
-            new TextDecoder("utf-8");
-
-
-        let buffer = "";
-
-
-        while (true) {
-
-            const { value, done } =
-                await reader.read();
-
-
-            if (done) {
-                break;
-            }
-
-
-            buffer += decoder.decode(
-                value,
-                { stream: true }
-            );
-
-
-            const lines =
-                buffer.split("\n");
-
-
-            // Keep incomplete line for next chunk
-            buffer = lines.pop() || "";
-
-
-            for (const line of lines) {
-
-                const trimmed =
-                    line.trim();
-
-
-                if (!trimmed) continue;
-
-
-                // Gemini SSE format
-                if (trimmed.startsWith("data:")) {
-
-                    const jsonText =
-                        trimmed.substring(5).trim();
-
-
-                    if (!jsonText) continue;
-
-
-                    try {
-
-                        const data =
-                            JSON.parse(jsonText);
-
-
-                        const text =
-                            data
-                                ?.candidates?.[0]
-                                ?.content?.parts?.[0]
-                                ?.text;
-
-
-                        if (text) {
-                            onChunk(text);
-                        }
-
-                    } catch (error) {
-
-                        console.warn(
-                            "Could not parse stream chunk:",
-                            jsonText
-                        );
-                    }
-                }
-            }
-        }
-
-
-        // Process any remaining buffer
-        if (buffer.trim().startsWith("data:")) {
-
-            const jsonText =
-                buffer.trim()
-                    .substring(5)
-                    .trim();
-
-
-            if (jsonText) {
-
-                try {
-
-                    const data =
-                        JSON.parse(jsonText);
-
-
-                    const text =
-                        data
-                            ?.candidates?.[0]
-                            ?.content?.parts?.[0]
-                            ?.text;
-
-
-                    if (text) {
-                        onChunk(text);
-                    }
-
-                } catch (error) {
-
-                    console.warn(
-                        "Could not parse final stream chunk."
-                    );
-                }
-            }
-        }
-
-
-        reader.releaseLock();
     }
 
-
-    // ==========================================
-    // CHAT SUBMISSION
-    // ==========================================
-
+    // Chat submission
     uiElements.form.addEventListener(
         "submit",
         async function (e) {
 
             e.preventDefault();
 
-
             const userText =
                 uiElements.input.value.trim();
 
-
             if (!userText) return;
 
-
-            // Disable input
+            // Clear input
             uiElements.input.value = "";
-
             uiElements.input.style.height = "auto";
 
+            // Disable send
             uiElements.sendBtn.disabled = true;
-
 
             // Display user message
             appendMessage(
@@ -734,10 +485,8 @@ Be concise but extremely thorough in logic.`;
                 userText
             );
 
-
-            // Add user message to history
+            // Add to conversation history
             conversationHistory.push({
-
                 role: "user",
 
                 parts: [
@@ -745,9 +494,7 @@ Be concise but extremely thorough in logic.`;
                         text: userText
                     }
                 ]
-
             });
-
 
             // Show loading
             uiElements.loadingIndicator.classList.remove(
@@ -758,13 +505,11 @@ Be concise but extremely thorough in logic.`;
                 "flex"
             );
 
-
             scrollToBottom();
-
 
             try {
 
-                // Prepare request
+                // Prepare payload
                 const payload = {
 
                     contents:
@@ -783,61 +528,24 @@ Be concise but extremely thorough in logic.`;
 
                 };
 
+                // Get Gemini response
+                const result =
+                    await fetchWithRetry(
+                        payload
+                    );
 
-                // Create streaming AI message
-                const streamingMessage =
-                    createStreamingMessage();
+                // Extract AI text
+                const aiText =
+                    result
+                        ?.candidates?.[0]
+                        ?.content?.parts?.[0]
+                        ?.text;
 
-
-                const contentElement =
-                    streamingMessage.contentElement;
-
-
-                // Hide loading dots
-                uiElements.loadingIndicator.classList.add(
-                    "hidden"
-                );
-
-                uiElements.loadingIndicator.classList.remove(
-                    "flex"
-                );
-
-
-                let fullResponse = "";
-
-
-                // Start streaming
-                await streamResponse(
-                    payload,
-                    (chunk) => {
-
-                        fullResponse += chunk;
-
-
-                        updateStreamingMessage(
-                            contentElement,
-                            fullResponse
-                        );
-
-                    }
-                );
-
-
-                // Make sure we received something
-                if (!fullResponse.trim()) {
-
+                if (!aiText) {
                     throw new Error(
-                        "AEGIS received an empty response."
+                        "Invalid response from Gemini API."
                     );
                 }
-
-
-                // Final render
-                finishStreamingMessage(
-                    contentElement,
-                    fullResponse
-                );
-
 
                 // Add AI response to history
                 conversationHistory.push({
@@ -846,20 +554,11 @@ Be concise but extremely thorough in logic.`;
 
                     parts: [
                         {
-                            text: fullResponse
+                            text: aiText
                         }
                     ]
 
                 });
-
-
-            } catch (error) {
-
-                console.error(
-                    "AEGIS API Error:",
-                    error
-                );
-
 
                 // Hide loading
                 uiElements.loadingIndicator.classList.add(
@@ -870,6 +569,27 @@ Be concise but extremely thorough in logic.`;
                     "flex"
                 );
 
+                // Display AI response
+                appendMessage(
+                    "model",
+                    aiText
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "AEGIS API Error:",
+                    error
+                );
+
+                // Hide loading
+                uiElements.loadingIndicator.classList.add(
+                    "hidden"
+                );
+
+                uiElements.loadingIndicator.classList.remove(
+                    "flex"
+                );
 
                 // Show error
                 appendMessage(
@@ -877,36 +597,25 @@ Be concise but extremely thorough in logic.`;
                     `**AEGIS Error:** ${error.message}`
                 );
 
-
                 // Remove failed user message
                 conversationHistory.pop();
 
             } finally {
 
-                // Re-enable send button
-                uiElements.sendBtn.disabled = false;
+                // Enable send button
+                uiElements.sendBtn.disabled =
+                    false;
 
                 uiElements.input.focus();
-
             }
-
         }
     );
 
-
-    // ==========================================
-    // MARKED CONFIGURATION
-    // ==========================================
-
+    // Marked configuration
     marked.setOptions({
-
         breaks: true,
-
         gfm: true
-
     });
-
-
 </script>
 </body>
   </html>
