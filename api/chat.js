@@ -7,20 +7,19 @@ export default async function handler(req, res) {
     }
 
     try {
-        // Read request body safely
         const body = req.body || {};
 
         const contents = body.contents;
         const systemInstruction = body.systemInstruction;
 
-        // Validate conversation data
+        // Validate request
         if (!Array.isArray(contents) || contents.length === 0) {
             return res.status(400).json({
                 error: "Invalid request: conversation contents are missing."
             });
         }
 
-        // Get Gemini API key from Vercel Environment Variables
+        // Get API key from Vercel Environment Variables
         const apiKey = process.env.GEMINI_API_KEY;
 
         if (!apiKey) {
@@ -34,9 +33,9 @@ export default async function handler(req, res) {
         // Gemini model
         const MODEL = "gemini-3.7-flash";
 
-        // Send request to Gemini
+        // Gemini streaming endpoint
         const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
+            `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:streamGenerateContent?alt=sse`,
             {
                 method: "POST",
 
@@ -52,32 +51,61 @@ export default async function handler(req, res) {
             }
         );
 
-        // Read Gemini response
-        const data = await response.json();
-
         // Gemini returned an error
         if (!response.ok) {
-            console.error("Gemini API Error:", data);
+            const errorText = await response.text();
+
+            console.error("Gemini API Error:", errorText);
 
             return res.status(response.status).json({
-                error:
-                    data?.error?.message ||
-                    "Gemini API request failed."
+                error: errorText || "Gemini API request failed."
             });
         }
 
-        // Successful response
-        return res.status(200).json(data);
+        // Make sure Gemini returned a stream
+        if (!response.body) {
+            return res.status(500).json({
+                error: "Gemini did not return a response stream."
+            });
+        }
+
+        // Tell browser that this is an SSE stream
+        res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
+        res.setHeader("Connection", "keep-alive");
+        res.setHeader("X-Accel-Buffering", "no");
+
+        // Read Gemini stream
+        const reader = response.body.getReader();
+
+        try {
+            while (true) {
+                const { done, value } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+
+                // Forward Gemini's stream directly to browser
+                res.write(Buffer.from(value));
+            }
+        } finally {
+            reader.releaseLock();
+        }
+
+        res.end();
 
     } catch (error) {
-        // Log the real error in Vercel
-        console.error("AEGIS Server Error:", error);
+        console.error("AEGIS Streaming Server Error:", error);
 
-        // Also return the actual error message for debugging
-        return res.status(500).json({
-            error:
-                error?.message ||
-                "Internal server error."
-        });
+        // If headers have not been sent, return JSON error
+        if (!res.headersSent) {
+            return res.status(500).json({
+                error: error?.message || "Internal server error."
+            });
+        }
+
+        // End an already-started stream
+        res.end();
     }
 }
