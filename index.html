@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS AI</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Marked.js (Markdown parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- DOMPurify (Security) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+
+    <!-- KaTeX (Math rendering) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js (Syntax Highlighting) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #e2e8f0;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Prose / Markdown Styling */
+        .prose pre {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: transparent !important;
+        }
+        .prose p { margin-bottom: 1rem; line-height: 1.6; }
+        .prose p:last-child { margin-bottom: 0; }
+        .prose h1, .prose h2, .prose h3 { color: #f8fafc; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #38bdf8; text-decoration: underline; }
+        .prose strong { color: #f8fafc; font-weight: 600; }
+        .prose blockquote { border-left: 4px solid #38bdf8; padding-left: 1rem; color: #94a3b8; font-style: italic; }
+        .prose :not(pre) > code {
+            font-family: 'Fira Code', monospace;
+            background-color: #1e293b;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.25rem;
+            font-size: 0.875em;
+            color: #38bdf8;
+        }
+
+        /* Neon Glow Effects */
+        .neon-border {
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2), inset 0 0 5px rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+        .neon-button:hover:not(:disabled) {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+            border-color: #38bdf8;
+        }
+
+        /* Typing Animation */
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Message Layout */
+        .msg-container { width: 100%; display: flex; padding: 1.5rem 0; position: relative; }
+        .msg-user { background-color: transparent; }
+        .msg-ai { background-color: rgba(30, 41, 59, 0.4); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .msg-content { max-width: 52rem; margin: 0 auto; display: flex; gap: 1.5rem; width: 100%; padding: 0 1rem; position: relative; }
+        .avatar { width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        
+        .msg-actions { opacity: 0; transition: opacity 0.2s; display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .msg-container:hover .msg-actions { opacity: 1; }
+
+        /* Sidebar Transitions */
+        #sidebar { transition: transform 0.3s ease-in-out; }
+        #sidebar-overlay { transition: opacity 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-[#0b0f19]">
+
+    <!-- Sidebar Overlay (Mobile) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-40 hidden opacity-0" onclick="toggleSidebar()"></div>
+
+    <!-- History Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#0b0f19] border-r border-gray-800 z-50 transform -translate-x-full md:relative md:translate-x-0 flex flex-col h-full">
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center">
+            <button onclick="startNewChat()" class="flex-1 flex items-center gap-2 bg-[#1e293b] hover:bg-gray-700 text-gray-200 py-2.5 px-4 rounded-xl transition-colors border border-gray-700">
+                <i data-lucide="plus" class="w-5 h-5 text-sky-400"></i>
+                <span class="font-medium text-sm">New Chat</span>
+            </button>
+            <button onclick="toggleSidebar()" class="md:hidden ml-2 p-2 text-gray-400 hover:text-white">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-3" id="history-list">
+            <!-- Chat history items will populate here -->
+        </div>
+
+        <div class="p-4 border-t border-gray-800 text-xs text-gray-500 text-center">
+            AEGIS v3.0 • Local Storage
+        </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <div class="flex-1 flex flex-col h-screen relative min-w-0">
+        
+        <!-- Top Navbar -->
+        <header class="h-16 flex items-center justify-between px-4 sm:px-6 bg-[#0b0f19]/90 backdrop-blur-md border-b border-gray-800 z-10 shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden p-2 -ml-2 text-gray-400 hover:text-white rounded-lg">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+                <div class="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-500/50 flex items-center justify-center text-sky-400">
+                    <i data-lucide="shield" class="w-5 h-5"></i>
+                </div>
+                <h1 class="text-xl font-semibold tracking-wide text-gray-100">AEGIS</h1>
+            </div>
+
+            <!-- Settings Button -->
+            <button onclick="toggleSettingsModal()" class="p-2 text-gray-400 hover:text-sky-400 rounded-xl hover:bg-[#1e293b] transition-all" title="Personalization Settings">
+                <i data-lucide="settings" class="w-5 h-5"></i>
+            </button>
+        </header>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-[#1e293b] border border-gray-700 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+                <div class="flex justify-between items-center mb-5 border-b border-gray-700 pb-3">
+                    <h3 class="text-lg font-semibold text-gray-100 flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-5 h-5 text-sky-400"></i> Personalization Settings
+                    </h3>
+                    <button onclick="toggleSettingsModal()" class="text-gray-400 hover:text-white">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <form id="settings-form" onsubmit="saveUserSettings(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Your Name</label>
+                        <input type="text" id="user-name" placeholder="e.g. Rahul" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl p-2.5 text-sm text-gray-200 outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Profession / Field</label>
+                        <input type="text" id="user-profession" placeholder="e.g. Web Developer, Student" class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl p-2.5 text-sm text-gray-200 outline-none focus:border-sky-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">About You & Preferences</label>
+                        <textarea id="user-about" rows="3" placeholder="e.g. I prefer concise code snippets in Python, simple explanations, and technical depth when asked." class="w-full bg-[#0b0f19] border border-gray-700 rounded-xl p-2.5 text-sm text-gray-200 outline-none focus:border-sky-500 resize-none"></textarea>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-3">
+                        <button type="button" onclick="toggleSettingsModal()" class="px-4 py-2 text-sm text-gray-400 hover:text-white">Cancel</button>
+                        <button type="submit" class="px-5 py-2 text-sm bg-sky-600 hover:bg-sky-500 text-white font-medium rounded-xl transition-all">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <main id="chat-container" class="flex-1 overflow-y-auto scroll-smooth pb-36 relative">
+            
+            <!-- Welcome Message -->
+            <div id="welcome-screen" class="h-full flex flex-col items-center justify-center text-center p-6 animate-fade-in">
+                <div class="w-20 h-20 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 mb-6 shadow-[0_0_30px_rgba(56,189,248,0.15)]">
+                    <i data-lucide="shield-check" class="w-10 h-10"></i>
+                </div>
+                <h2 class="text-3xl font-semibold text-gray-100 mb-3" id="welcome-title">Welcome to AEGIS AI</h2>
+                <p class="text-gray-400 max-w-md text-sm sm:text-base">Your intelligent assistant is ready. Tailored to adapt to your style and preferences. What are we building today?</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-10 max-w-2xl w-full">
+                    <button onclick="setInput('Write a Python script to handle API rate limiting.')" class="p-4 text-left rounded-xl border border-gray-800 bg-[#1e293b]/50 hover:bg-[#1e293b] transition-colors group text-sm text-gray-300">
+                        <span class="block text-sky-400 mb-1 group-hover:text-sky-300"><i data-lucide="code" class="inline w-4 h-4 mr-1 mb-0.5"></i> Architecture</span>
+                        Write a Python script to handle API rate limiting.
+                    </button>
+                    <button onclick="setInput('Explain Transformers architecture mathematically.')" class="p-4 text-left rounded-xl border border-gray-800 bg-[#1e293b]/50 hover:bg-[#1e293b] transition-colors group text-sm text-gray-300">
+                        <span class="block text-purple-400 mb-1 group-hover:text-purple-300"><i data-lucide="brain" class="inline w-4 h-4 mr-1 mb-0.5"></i> Deep Learning</span>
+                        Explain Transformers architecture mathematically.
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Messages Wrapper -->
+            <div id="messages-wrapper" class="hidden pb-4"></div>
+            
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="hidden msg-container msg-ai">
+                <div class="msg-content">
+                    <div class="avatar bg-sky-500/20 border border-sky-500/50 text-sky-400">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                    </div>
+                    <div class="flex items-center gap-1 h-8">
+                        <div class="w-2 h-2 rounded-full bg-sky-400 typing-dot"></div>
+                        <div class="w-2 h-2 rounded-full bg-sky-400 typing-dot"></div>
+                        <div class="w-2 h-2 rounded-full bg-sky-400 typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Input Area -->
+        <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0b0f19] via-[#0b0f19] to-transparent pt-12 pb-6 px-4">
+            <!-- Stop Generating Button -->
+            <div id="stop-btn-container" class="hidden absolute -top-4 left-1/2 transform -translate-x-1/2 z-20">
+                <button onclick="stopGeneration()" class="bg-[#1e293b] border border-gray-600 text-gray-300 px-4 py-1.5 rounded-full flex items-center gap-2 text-sm hover:bg-gray-700 shadow-lg transition-colors">
+                    <i data-lucide="square" class="w-4 h-4 text-red-400 fill-red-400"></i> Stop Generating
+                </button>
+            </div>
+
+            <div class="max-w-4xl mx-auto relative">
+                <form id="chat-form" class="relative flex items-end gap-2 bg-[#1e293b] rounded-2xl p-2 neon-border transition-all duration-300">
+                    <textarea 
+                        id="user-input"
+                        rows="1"
+                        class="w-full max-h-48 bg-transparent text-gray-100 placeholder-gray-500 p-3 outline-none resize-none overflow-y-auto"
+                        placeholder="Message AEGIS..."
+                        required
+                    ></textarea>
+                    <button 
+                        type="submit"
+                        id="send-button"
+                        class="p-3 rounded-xl bg-sky-600 text-white hover:bg-sky-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed neon-button flex-shrink-0 flex items-center justify-center"
+                    >
+                        <i data-lucide="send" class="w-5 h-5 ml-0.5 mt-0.5"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    lucide.createIcons();
+
+    const MODEL_URL = "/api/chat";
+    const CONTEXT_WINDOW_SIZE = 8;
+    const STORAGE_KEY = "aegis_chat_sessions";
+    const USER_PROFILE_KEY = "aegis_user_profile";
+
+    let currentAbortController = null;
+    let isGenerating = false;
+
+    let chatSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let activeSessionId = localStorage.getItem('aegis_active_session');
+
+    const ui = {
+        form: document.getElementById("chat-form"),
+        input: document.getElementById("user-input"),
+        sendBtn: document.getElementById("send-button"),
+        welcomeScreen: document.getElementById("welcome-screen"),
+        welcomeTitle: document.getElementById("welcome-title"),
+        messagesWrapper: document.getElementById("messages-wrapper"),
+        loadingIndicator: document.getElementById("loading-indicator"),
+        chatContainer: document.getElementById("chat-container"),
+        stopBtnContainer: document.getElementById("stop-btn-container"),
+        sidebar: document.getElementById("sidebar"),
+        sidebarOverlay: document.getElementById("sidebar-overlay"),
+        historyList: document.getElementById("history-list"),
+        settingsModal: document.getElementById("settings-modal")
+    };
+
+    // --- PERSONALIZATION SETTINGS ---
+    function loadUserSettings() {
+        const profile = JSON.parse(localStorage.getItem(USER_PROFILE_KEY)) || {};
+        document.getElementById("user-name").value = profile.name || "";
+        document.getElementById("user-profession").value = profile.profession || "";
+        document.getElementById("user-about").value = profile.about || "";
+        
+        if (profile.name) {
+            ui.welcomeTitle.innerText = `Welcome back, ${profile.name}`;
+        } else {
+            ui.welcomeTitle.innerText = "Welcome to AEGIS AI";
+        }
+    }
+
+    window.toggleSettingsModal = function() {
+        ui.settingsModal.classList.toggle("hidden");
+    };
+
+    window.saveUserSettings = function(e) {
+        e.preventDefault();
+        const profile = {
+            name: document.getElementById("user-name").value.trim(),
+            profession: document.getElementById("user-profession").value.trim(),
+            about: document.getElementById("user-about").value.trim()
+        };
+        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+        loadUserSettings();
+        toggleSettingsModal();
+    };
+
+    // --- SIDEBAR LOGIC ---
+    window.toggleSidebar = function() {
+        const isOpen = !ui.sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            ui.sidebar.classList.add('-translate-x-full');
+            ui.sidebarOverlay.classList.add('hidden');
+            ui.sidebarOverlay.classList.remove('opacity-100');
+        } else {
+            ui.sidebar.classList.remove('-translate-x-full');
+            ui.sidebarOverlay.classList.remove('hidden');
+            setTimeout(() => ui.sidebarOverlay.classList.add('opacity-100'), 10);
+        }
+    };
+
+    function saveSessions() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatSessions));
+        if(activeSessionId) localStorage.setItem('aegis_active_session', activeSessionId);
+        else localStorage.removeItem('aegis_active_session');
+    }
+
+    function renderSidebar() {
+        ui.historyList.innerHTML = '';
+        if(chatSessions.length === 0) {
+            ui.historyList.innerHTML = '<div class="text-gray-500 text-sm text-center mt-4">No previous conversations</div>';
+            return;
+        }
+
+        chatSessions.forEach(session => {
+            const btn = document.createElement('button');
+            const isActive = session.id === activeSessionId;
+            btn.className = `w-full text-left p-3 rounded-xl mb-1 flex items-center justify-between group transition-colors ${isActive ? 'bg-sky-900/30 text-sky-400 border border-sky-800/50' : 'text-gray-300 hover:bg-gray-800 border border-transparent'}`;
+            
+            btn.innerHTML = `
+                <div class="flex items-center gap-3 overflow-hidden" onclick="loadSession('${session.id}')">
+                    <i data-lucide="message-square" class="w-4 h-4 shrink-0 ${isActive ? 'text-sky-400' : 'text-gray-500'}"></i>
+                    <span class="text-sm truncate">${escapeHtml(session.title || 'New Conversation')}</span>
+                </div>
+                <button onclick="deleteSession(event, '${session.id}')" class="text-gray-500 hover:text-red-400 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity p-1">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            `;
+            ui.historyList.appendChild(btn);
+        });
+        lucide.createIcons({ root: ui.historyList });
+    }
+
+    window.startNewChat = function() {
+        if(window.innerWidth < 768) toggleSidebar();
+        activeSessionId = null;
+        localStorage.removeItem('aegis_active_session');
+        ui.messagesWrapper.innerHTML = "";
+        ui.messagesWrapper.classList.add("hidden");
+        ui.welcomeScreen.classList.remove("hidden");
+        ui.input.value = "";
+        ui.input.style.height = "auto";
+        ui.input.focus();
+        renderSidebar();
+    };
+
+    window.loadSession = function(sessionId) {
+        if(isGenerating) return;
+        if(window.innerWidth < 768) toggleSidebar();
+        
+        activeSessionId = sessionId;
+        saveSessions();
+        renderSidebar();
+        
+        const session = chatSessions.find(s => s.id === sessionId);
+        if(session) {
+            ui.welcomeScreen.classList.add("hidden");
+            ui.messagesWrapper.innerHTML = "";
+            ui.messagesWrapper.classList.remove("hidden");
+            
+            session.messages.forEach((msg, index) => {
+                appendMessage(msg.role, msg.parts[0].text, index, false);
+            });
+            setTimeout(scrollToBottom, 100);
+        }
+    };
+
+    window.deleteSession = function(e, sessionId) {
+        e.stopPropagation();
+        if(confirm("Delete this conversation?")) {
+            chatSessions = chatSessions.filter(s => s.id !== sessionId);
+            if(activeSessionId === sessionId) {
+                startNewChat();
+            } else {
+                saveSessions();
+                renderSidebar();
+            }
+        }
+    };
+
+    // --- UTILITIES ---
+    function getTimeString() {
+        return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function escapeHtml(unsafe) {
+        if(!unsafe) return "";
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function formatAndSecureText(text) {
+        const rawHtml = marked.parse(text);
+        return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target'] });
+    }
+
+    function applyEnhancements(msgDiv) {
+        const markdownBody = msgDiv.querySelector('.markdown-body');
+        if(!markdownBody) return;
+
+        renderMathInElement(markdownBody, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            throwOnError: false
+        });
+
+        const preTags = markdownBody.querySelectorAll('pre');
+        preTags.forEach(pre => {
+            const codeEl = pre.querySelector('code');
+            if(!codeEl) return;
+            const rawCodeText = codeEl.innerText;
+            
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper relative mt-4 mb-4 rounded-lg overflow-hidden border border-gray-700 shadow-md';
+            
+            wrapper.innerHTML = `
+                <div class="bg-[#1e293b] text-gray-400 text-xs px-4 py-2 flex justify-between items-center border-b border-gray-700/50">
+                    <span class="font-mono text-gray-500">code</span>
+                    <button class="hover:text-sky-400 transition-colors flex items-center gap-1 copy-btn" title="Copy Code">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copy</span>
+                    </button>
+                </div>
+                <div class="overflow-x-auto bg-[#0b0f19] p-4">
+                    <pre class="!m-0 !p-0"><code class="hljs text-sm">${escapeHtml(rawCodeText)}</code></pre>
+                </div>
+            `;
+            
+            pre.parentNode.replaceChild(wrapper, pre);
+            const newCode = wrapper.querySelector('code');
+            hljs.highlightElement(newCode);
+            
+            const copyBtn = wrapper.querySelector('.copy-btn');
+            lucide.createIcons({ root: wrapper });
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(rawCodeText).then(() => {
+                    copyBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-green-400"></i> <span class="text-green-400">Copied!</span>`;
+                    lucide.createIcons({ root: copyBtn });
+                    setTimeout(() => {
+                        copyBtn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copy</span>`;
+                        lucide.createIcons({ root: copyBtn });
+                    }, 2000);
+                });
+            });
+        });
+    }
+
+    window.copyMessage = function(button, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const icon = button.querySelector('i');
+            icon.setAttribute('data-lucide', 'check');
+            icon.classList.add('text-green-400');
+            lucide.createIcons({ root: button });
+            setTimeout(() => {
+                icon.setAttribute('data-lucide', 'copy');
+                icon.classList.remove('text-green-400');
+                lucide.createIcons({ root: button });
+            }, 2000);
+        });
+    };
+
+    ui.input.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 200) + "px";
+        if (this.value.trim() === "") this.style.height = "auto";
+    });
+
+    ui.input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            if (this.value.trim() && !isGenerating) ui.form.dispatchEvent(new Event("submit"));
+        }
+    });
+
+    window.setInput = function (text) {
+        ui.input.value = text;
+        ui.input.dispatchEvent(new Event("input"));
+        ui.form.dispatchEvent(new Event("submit"));
+    };
+
+    function scrollToBottom() {
+        ui.chatContainer.scrollTo({ top: ui.chatContainer.scrollHeight, behavior: "smooth" });
+    }
+
+    function appendMessage(role, text, id = null, animate = true) {
+        ui.welcomeScreen.classList.add("hidden");
+        ui.messagesWrapper.classList.remove("hidden");
+
+        const isUser = role === "user";
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `msg-container ${isUser ? "msg-user" : "msg-ai"}`;
+        if(id !== null) msgDiv.dataset.id = id;
+
+        const avatarHtml = isUser
+            ? `<div class="avatar bg-gray-700 text-gray-300 mt-1"><i data-lucide="user" class="w-5 h-5"></i></div>`
+            : `<div class="avatar bg-sky-500/20 border border-sky-500/50 text-sky-400 mt-1 shadow-[0_0_10px_rgba(56,189,248,0.2)]"><i data-lucide="shield" class="w-5 h-5"></i></div>`;
+            
+        let actionsHtml = `<div class="msg-actions">`;
+        if (isUser) {
+            actionsHtml += `<button onclick="editMessage('${id}')" class="text-gray-500 hover:text-sky-400 p-1" title="Edit"><i data-lucide="edit-2" class="w-4 h-4"></i></button>`;
+        } else {
+            actionsHtml += `<button onclick="copyMessage(this, \`${escapeHtml(text)}\`)" class="text-gray-500 hover:text-sky-400 p-1" title="Copy"><i data-lucide="copy" class="w-4 h-4"></i></button>`;
+            actionsHtml += `<button onclick="regenerateResponse('${id}')" class="text-gray-500 hover:text-sky-400 p-1" title="Regenerate"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>`;
+        }
+        actionsHtml += `<span class="text-gray-600 text-xs ml-2 mt-1.5">${getTimeString()}</span></div>`;
+
+        msgDiv.innerHTML = `
+            <div class="msg-content">
+                ${avatarHtml}
+                <div class="flex-1 w-full overflow-hidden pt-1">
+                    <div class="prose prose-invert max-w-none text-gray-200 markdown-body">
+                        ${isUser ? DOMPurify.sanitize(text).replace(/\n/g, "<br>") : formatAndSecureText(text)}
+                    </div>
+                    ${actionsHtml}
+                </div>
+            </div>
+        `;
+
+        ui.messagesWrapper.appendChild(msgDiv);
+        lucide.createIcons({ root: msgDiv });
+
+        if (!isUser) {
+            applyEnhancements(msgDiv);
+        }
+
+        if(animate) scrollToBottom();
+        return msgDiv;
+    }
+
+    // --- CORE LOGIC ---
+    window.editMessage = function(id) {
+        if(isGenerating) return;
+        const msgIndex = parseInt(id);
+        const session = chatSessions.find(s => s.id === activeSessionId);
+        if(!session) return;
+        
+        ui.input.value = session.messages[msgIndex].parts[0].text;
+        ui.input.style.height = "auto";
+        ui.input.style.height = Math.min(ui.input.scrollHeight, 200) + "px";
+        ui.input.focus();
+    };
+
+    window.regenerateResponse = function(id) {
+        if(isGenerating) return;
+        const session = chatSessions.find(s => s.id === activeSessionId);
+        if(!session) return;
+        
+        const msgIndex = parseInt(id);
+        if(msgIndex !== session.messages.length - 1) {
+            alert("Sirf latest message regenerate ho sakta hai.");
+            return;
+        }
+        session.messages.pop();
+        ui.messagesWrapper.removeChild(ui.messagesWrapper.lastChild);
+        
+        const lastUserMsg = session.messages.pop();
+        ui.messagesWrapper.removeChild(ui.messagesWrapper.lastChild);
+        saveSessions();
+        
+        triggerSend(lastUserMsg.parts[0].text);
+    };
+
+    window.stopGeneration = function() {
+        if (currentAbortController) {
+            currentAbortController.abort();
+            ui.stopBtnContainer.classList.add('hidden');
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+            isGenerating = false;
+            ui.sendBtn.disabled = false;
+        }
+    };
+
+    async function triggerSend(userText) {
+        if (!userText || isGenerating) return;
+
+        isGenerating = true;
+        ui.sendBtn.disabled = true;
+        ui.stopBtnContainer.classList.remove('hidden');
+
+        if(!activeSessionId) {
+            const newSession = {
+                id: 'session_' + Date.now(),
+                title: userText.substring(0, 30) + (userText.length > 30 ? '...' : ''),
+                messages: [],
+                updatedAt: Date.now()
+            };
+            chatSessions.unshift(newSession);
+            activeSessionId = newSession.id;
+            renderSidebar();
+        }
+
+        const session = chatSessions.find(s => s.id === activeSessionId);
+        
+        const userMsgId = session.messages.length;
+        session.messages.push({ role: "user", parts: [{ text: userText }] });
+        session.updatedAt = Date.now();
+        saveSessions();
+        appendMessage("user", userText, userMsgId);
+
+        ui.loadingIndicator.classList.remove("hidden");
+        ui.loadingIndicator.classList.add("flex");
+        scrollToBottom();
+
+        const slicedContents = session.messages.slice(-CONTEXT_WINDOW_SIZE);
+        const userProfile = JSON.parse(localStorage.getItem(USER_PROFILE_KEY)) || {};
+
+        currentAbortController = new AbortController();
+
+        try {
+            const payload = { 
+                contents: slicedContents,
+                userProfile: userProfile 
+            };
+
+            const response = await fetch(MODEL_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                signal: currentAbortController.signal
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(()=>({}));
+                throw new Error(errData.error || `Server Error (${response.status})`);
+            }
+
+            const result = await response.json();
+            const aiText = result?.candidates?.[0]?.content?.parts?.[0]?.text || result?.text;
+
+            if (!aiText) throw new Error("Invalid response received.");
+
+            const aiMsgId = session.messages.length;
+            session.messages.push({ role: "model", parts: [{ text: aiText }] });
+            session.updatedAt = Date.now();
+            saveSessions();
+
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+            appendMessage("model", aiText, aiMsgId);
+
+        } catch (error) {
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+
+            if (error.name === 'AbortError') {
+                appendMessage("model", "*Generation stopped by user.*");
+            } else {
+                let friendlyError = `**System Alert:** ${error.message}`;
+                if (error.message.includes('429')) friendlyError = "**Rate Limit Hit:** Server busy hai ya usage limit exhaust ho gayi hai. Please thoda wait karein.";
+                appendMessage("model", friendlyError);
+                
+                session.messages.pop();
+                saveSessions();
+            }
+        } finally {
+            isGenerating = false;
+            ui.sendBtn.disabled = false;
+            ui.stopBtnContainer.classList.add('hidden');
+            ui.input.focus();
+            currentAbortController = null;
+        }
+    }
+
+    ui.form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const text = ui.input.value.trim();
+        ui.input.value = "";
+        ui.input.style.height = "auto";
+        triggerSend(text);
+    });
+
+    // Boot
+    loadUserSettings();
+    renderSidebar();
+    if(activeSessionId) {
+        loadSession(activeSessionId);
+    }
+   </script>
+</body>
+</html>
