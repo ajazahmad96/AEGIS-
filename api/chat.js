@@ -16,9 +16,16 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
     }
 
+    // Dynamic Keys Array Collection (Supports GEMINI_API_KEY_1, GEMINI_API_KEY_2, GEMINI_API_KEY_3, GEMINI_API_KEY_4, etc.)
     const keys = [];
-    if (process.env.GEMINI_API_KEY_1) keys.push(process.env.GEMINI_API_KEY_1);
-    if (process.env.GEMINI_API_KEY_2) keys.push(process.env.GEMINI_API_KEY_2);
+    
+    // Check specific numbered keys (1 to 10 dynamically)
+    for (let i = 1; i <= 10; i++) {
+        const keyEnv = process.env[`GEMINI_API_KEY_${i}`];
+        if (keyEnv) keys.push(keyEnv);
+    }
+
+    // Fallback for default GEMINI_API_KEY
     if (process.env.GEMINI_API_KEY && !keys.includes(process.env.GEMINI_API_KEY)) {
         keys.push(process.env.GEMINI_API_KEY);
     }
