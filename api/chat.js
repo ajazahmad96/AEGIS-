@@ -43,8 +43,10 @@ export default async function handler(req, res) {
     }
 
     if (keys.length === 0) {
+        console.error('No Gemini API keys configured.');
+
         return res.status(500).json({
-            error: 'No API keys configured on server.'
+            error: 'AI service is not configured.'
         });
     }
 
@@ -61,7 +63,6 @@ export default async function handler(req, res) {
 
     // =========================================================
     // USER PROFILE
-    // Keep only useful information.
     // =========================================================
     let userInfoContext = '';
 
@@ -69,7 +70,9 @@ export default async function handler(req, res) {
         const profileParts = [];
 
         if (userProfile.name) {
-            profileParts.push(`Name: ${String(userProfile.name).slice(0, 100)}`);
+            profileParts.push(
+                `Name: ${String(userProfile.name).slice(0, 100)}`
+            );
         }
 
         if (userProfile.profession) {
@@ -93,9 +96,7 @@ ${profileParts.join('\n')}
     }
 
     // =========================================================
-    // COMPACT AEGIS CORE INSTRUCTION
-    //
-    // Important behavior is preserved while removing repetition.
+    // AEGIS CORE SYSTEM INSTRUCTION
     // =========================================================
     const systemInstruction = `
 You are AEGIS — Adaptive Engine for General Intelligence & Support.
@@ -106,7 +107,8 @@ IDENTITY
 - Current interface: Text-only conversational AI.
 - Current capabilities: Understanding and generating text, reasoning,
   coding assistance, learning assistance, planning, productivity,
-  writing, and creative tasks.
+  writing, creative tasks, and web-grounded answers when Google Search
+  is available.
 
 MISSION
 Help the user learn, reason, build, plan, solve problems, and make
@@ -126,8 +128,7 @@ COMMUNICATION
 - Simple questions should receive concise answers.
 - Complex questions should receive structured explanations.
 - Avoid unnecessary filler and repetition.
-- For casual or emotional conversations, respond naturally instead of
-  forcing a rigid answer-first format.
+- For casual or emotional conversations, respond naturally.
 
 REASONING
 - Understand the user's actual intent.
@@ -141,12 +142,22 @@ REASONING
 
 TRUTHFULNESS
 - Never fabricate facts, sources, memories, capabilities, actions,
-  results, or personal information.
+  or results.
 - Never pretend to know something unknown.
 - Clearly distinguish facts, assumptions, estimates, opinions, and
   speculation.
 - If uncertain, say so.
 - Never claim an action was completed unless it actually happened.
+
+WEB SEARCH
+- Google Search may be available as a built-in grounding tool.
+- Use web search when current, changing, or up-to-date information
+  would materially improve the answer.
+- Do not claim that a search was performed unless the API actually
+  returned grounded search information.
+- When grounded information is available, use it carefully and
+  distinguish current facts from general knowledge.
+- Do not invent citations or sources.
 
 CURRENT LIMITATIONS
 AEGIS currently does NOT have built-in access to:
@@ -161,6 +172,9 @@ AEGIS currently does NOT have built-in access to:
 - User accounts
 - External services
 - Real-world physical actions
+
+Google Search grounding is an API-provided capability and does not
+mean AEGIS has unrestricted browser or device access.
 
 Do not claim access to any unavailable capability unless the application
 actually provides it through a tool.
@@ -224,20 +238,28 @@ and genuinely useful within AEGIS's actual capabilities.
 
     // =========================================================
     // CONVERSATION OPTIMIZATION
-    //
-    // Keep recent messages instead of sending unlimited history.
-    // 20 messages = roughly the last 10 user/model exchanges.
     // =========================================================
     const MAX_MESSAGES = 20;
 
     const optimizedContents = contents
         .slice(-MAX_MESSAGES)
+        .filter(
+            (msg) =>
+                msg &&
+                (msg.role === 'user' || msg.role === 'model')
+        )
         .map((msg) => ({
-            role: msg.role === 'user' ? 'user' : 'model',
+            role: msg.role,
             parts: Array.isArray(msg.parts)
                 ? msg.parts
                 : [{ text: String(msg.parts || '') }]
         }));
+
+    if (optimizedContents.length === 0) {
+        return res.status(400).json({
+            error: 'No valid conversation messages found.'
+        });
+    }
 
     // =========================================================
     // GEMINI PAYLOAD
@@ -253,6 +275,16 @@ and genuinely useful within AEGIS's actual capabilities.
 
         contents: optimizedContents,
 
+        // =====================================================
+        // GOOGLE SEARCH GROUNDING
+        // Gemini can automatically search the web when useful.
+        // =====================================================
+        tools: [
+            {
+                google_search: {}
+            }
+        ],
+
         generationConfig: {
             temperature: 0.7
         }
@@ -261,7 +293,7 @@ and genuinely useful within AEGIS's actual capabilities.
     // =========================================================
     // KEY ROTATION
     // =========================================================
-    let lastErrorMsg = '';
+    let lastErrorMsg = 'Unknown API error';
     let lastStatus = 500;
 
     for (let ki = 0; ki < keys.length; ki++) {
@@ -269,7 +301,7 @@ and genuinely useful within AEGIS's actual capabilities.
 
         try {
             const apiResponse = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+                `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
                 {
                     method: 'POST',
                     headers: {
@@ -283,14 +315,19 @@ and genuinely useful within AEGIS's actual capabilities.
 
             if (!apiResponse.ok) {
                 const error = new Error(
-                    data.error?.message ||
-                    `API status: ${apiResponse.status}`
+                    data?.error?.message ||
+                    `Gemini API status: ${apiResponse.status}`
                 );
 
                 error.status = apiResponse.status;
                 throw error;
             }
 
+            // =================================================
+            // SUCCESS
+            // The response can contain groundingMetadata when
+            // Google Search was actually used.
+            // =================================================
             return res.status(200).json(data);
 
         } catch (error) {
@@ -302,15 +339,36 @@ and genuinely useful within AEGIS's actual capabilities.
                 lastErrorMsg
             );
 
-            // Continue to the next key.
+            // -------------------------------------------------
+            // Only rotate keys for errors where trying another
+            // key may reasonably help.
+            // -------------------------------------------------
+            const retryable =
+                lastStatus === 400 ||
+                lastStatus === 401 ||
+                lastStatus === 403 ||
+                lastStatus === 429 ||
+                lastStatus >= 500;
+
+            if (!retryable) {
+                break;
+            }
+
+            // Continue to next key.
         }
     }
 
     // =========================================================
     // ALL KEYS FAILED
+    // Do NOT expose raw Gemini errors to the client.
     // =========================================================
-    return res.status(lastStatus === 429 ? 429 : 500).json({
-        error: 'Gemini API rejected all configured keys.',
-        details: lastErrorMsg
+    if (lastStatus === 429) {
+        return res.status(429).json({
+            error: 'AI service rate limit reached. Please try again shortly.'
+        });
+    }
+
+    return res.status(500).json({
+        error: 'AI service is temporarily unavailable.'
     });
 }
