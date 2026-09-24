@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>AEGIS</title>
+    <!-- Favicon (AEGIS logo) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTQiIGZpbGw9IiMxRDRFNzYiLz48c3ZnIHg9IjEwIiB5PSIxMCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjQ0IiB2aWV3Qm94PSIxMiAyMi41IDQ3MCA0NzAiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAsNTEyKSBzY2FsZSgwLjEsLTAuMSkiIGZpbGw9IiNmZmYiPjxwYXRoIGQ9Ik0yMTU1IDQ2NTAgYy0xNzAgLTEwNCAtNDM4IC0yNjYgLTU5NSAtMzYxIC0xNTcgLTk1IC0zMDMgLTE4NCAtMzI1IC0xOTkgLTIyIC0xNSAtNDcgLTMwIC01NSAtMzQgLTggLTQgLTI0IC0xMiAtMzUgLTE5IC01MiAtMzIgLTEwMyAtNjMgLTEyMCAtNzQgLTE3MiAtMTAzIC0zNTEgLTIxMyAtMzkzIC0yMzkgbC01MiAtMzQgMiAtMTA3OSBjMiAtNTk0IDYgLTEwODIgMTAgLTEwODYgNiAtNiA5MCAzNSAxNTMgNzYgMTcgMTAgMzcgMjIgNDUgMjYgOCA0IDQ4IDI2IDg4IDUwIDQxIDI0IDc1IDQzIDc3IDQzIDIgMCA0NyAyNiAxMDIgNTggNTQgMzIgMTM5IDgwIDE4OCAxMDYgNTAgMjYgOTcgNTMgMTA1IDYwIDE2IDEyIDMwIDIwIDEyMyA3MSA5NiA1MiAzMjAgMTgyIDMzOSAxOTcgOSA3IDQ0IDY3IDc5IDEzMyAzNCA2NiA4MSAxNTYgMTA0IDIwMCAyMyA0NCA2OCAxMzAgMTAwIDE5MCAzMiA2MSA3NCAxNDIgOTUgMTgwIDIwIDM5IDYxIDExNSA5MCAxNzAgMjkgNTUgNjkgMTI5IDg4IDE2NSAxOSAzNiA1OSAxMTIgOTAgMTcwIDMwIDU4IDY1IDEyMyA3NyAxNDUgMTMgMjIgNDYgODUgNzUgMTQwIDI5IDU1IDY4IDEyOSA4NyAxNjUgMjAgMzYgNTYgMTAzIDgxIDE1MCAyNCA0NyA2MSAxMTQgODAgMTUwIDE5IDM2IDUwIDk0IDcwIDEzMCAxOSAzNiA1MCA5MyA2OCAxMjcgMTkgMzQgMzQgNjYgMzQgNzIgMCA4IC0xODUgMTI1IC0zMzMgMjEwIC0yMyAxMyAtNzEgNDMgLTEwNyA2NiAtNzUgNDkgLTEwNSA2NSAtMTE3IDY0IC00IDAgLTE0NyAtODUgLTMxOCAtMTg5eiBtLTIwNSAtNjU1IGMwIC04IC0xMSAtMzQgLTI0IC01NyAtMTMgLTI0IC0zNyAtNjggLTU0IC05OCAtMTcgLTMxIC01NSAtMTAzIC04NSAtMTYwIC0yOSAtNTggLTc3IC0xNDkgLTEwNSAtMjAyIC0yOSAtNTQgLTc1IC0xNDEgLTEwMiAtMTkzIC0yOCAtNTIgLTYxIC0xMTQgLTc0IC0xMzcgLTEyIC0yNCAtNTEgLTk3IC04NiAtMTYzIC0zNCAtNjYgLTc5IC0xNTEgLTEwMCAtMTkwIC04MyAtMTU1IC0xNTcgLTI5NiAtMjE2IC00MTAgLTM0IC02NiAtNjggLTEyMCAtNzUgLTEyMCAtMjAgMCAtMjYgMTE1MiAtNyAxMTc4IDcgOSAxMTAgNzYgMjI4IDE0OSAyOTQgMTgwIDQ4OSAzMDAgNTkwIDM2NCA4OSA1NiAxMTAgNjQgMTEwIDM5eiIvPjxwYXRoIGQ9Ik0zMTg4IDQzODMgYy05IC0xMCAtMzYgLTU2IC02MSAtMTAzIC0yNCAtNDcgLTY1IC0xMjQgLTkxIC0xNzIgLTI1IC00NyAtNDYgLTkzIC00NiAtMTAyIDAgLTkgLTUgLTE2IC0xMCAtMTYgLTYgMCAtMTQgLTggLTE3IC0xNyAtNCAtMTAgLTE5IC0zOSAtMzUgLTY1IC0xNSAtMjYgLTQ0IC04MCAtNjUgLTEyMCAtMjAgLTQwIC01MyAtMTAwIC03MyAtMTMzIC0yMCAtMzMgLTQ4IC04MiAtNjIgLTExMCAtMTQgLTI3IC00NyAtODggLTczIC0xMzUgLTkwIC0xNjYgLTg2IC0xMzcgLTI5IC0yNDggMTcxIC0zMzEgMTg5IC0zNjIgMjA4IC0zNjIgMTAgMCA0MSAxNCA2OCAzMCAyNiAxNyA1MCAzMCA1MyAzMCAyIDAgMjQgMTQgNDggMzAgMjUgMTcgNDkgMzAgNTQgMzAgNSAwIDMxIDE1IDU5IDMzIDU5IDM3IDY1IDQxIDE4MSAxMDYgNDggMjggOTggNTcgMTExIDY2IDIzIDE2IDI5IDQ0IDEzIDYwIC01IDYgLTM3IDY0IC03MSAxMzAgLTM0IDY2IC03NyAxNDcgLTk1IDE4MCAtMTggMzMgLTU1IDEwMyAtODIgMTU1IC0xOTAgMzYwIC0xODUgMzUwIC0xNTYgMzQ5IDEwIDAgMzAgLTggNDUgLTE3IDE1IC05IDgxIC01MSAxNDggLTkyIDY3IC00MSAxMzIgLTgyIDE0NSAtOTAgNzcgLTQ4IDIxMyAtMTMzIDIzMCAtMTQzIDExIC03IDQ5IC0zMCA4NSAtNTMgMzYgLTIyIDEwNCAtNjQgMTUyIC05MyA0OCAtMzAgOTIgLTU5IDk3IC02NSA3IC04IDExIC0xNzEgMTMgLTQyMiAzIC0zNDkgNSAtNDEzIDE5IC00MzkgOCAtMTYgMzggLTczIDY2IC0xMjUgNTEgLTk2IDEyNiAtMjQwIDIzNSAtNDUwIDc1IC0xNDQgOTAgLTE3MCAxMDAgLTE3MCA0IDAgOCA0MTggOCA5MjggbDAgOTI4IC00MiAyNyBjLTU1IDM0IC01MzggMzI4IC03MjggNDQzIC04MCA0OCAtMTk4IDEyMCAtMjYzIDE2MSAtNjQgNDAgLTExOSA3MyAtMTIxIDczIC0xIDAgLTEwIC04IC0xOCAtMTd6Ii8+PHBhdGggZD0iTTM0NDcgMjkyNSBjLTMyIC0xOSAtNjAgLTM1IC02MyAtMzUgLTIgMCAtMjMgLTEyIC00NyAtMjcgLTIzIC0xNSAtNjIgLTM4IC04NyAtNTAgLTI1IC0xMyAtNTIgLTI4IC02MCAtMzMgLTMzIC0yMSAtMTcyIC0xMDAgLTE3NiAtMTAwIC00IDAgLTE5NyAtMTEyIC0yMjQgLTEzMCAtOCAtNiAtMjIgLTEzIC0zMCAtMTcgLTggLTQgLTQ4IC0yNiAtODggLTUwIC00MSAtMjQgLTc1IC00MyAtNzggLTQzIC0yIDAgLTQ5IC0yNyAtMTA1IC02MCAtNTUgLTMzIC0xMDIgLTYwIC0xMDQgLTYwIC0yIDAgLTQ4IC0yNSAtMTAyIC01NiAtNTQgLTMxIC0xNDMgLTgzIC0xOTggLTExNCAtMjIxIC0xMjYgLTMyNiAtMTg2IC00NDUgLTI1NSAtNjkgLTQwIC0yMTAgLTEyMSAtMzE1IC0xODAgLTEwNCAtNTkgLTI0MyAtMTM4IC0zMDcgLTE3NiAtNjQgLTM4IC0xMTkgLTY5IC0xMjIgLTY5IC0xMiAwIC0yMDYgLTEyMiAtMjA2IC0xMzAgMCAtNCA3MyAtNTIgMTYzIC0xMDYgODkgLTU0IDE5OSAtMTIyIDI0NSAtMTUyIDQ2IC0yOSA5MCAtNTIgOTkgLTUwIDE4IDMgMTggMyAxMzcgMjMxIDQ4IDkzIDkyIDE3OCA5OSAxODkgNyAxMSA0MSAzMyA3NyA1MCA2NCAzMCAxODUgODggNTE1IDI0OCA5NCA0NSAyMzEgMTEyIDMwNSAxNDcgMTcxIDgzIDQ3MCAyMjggNjIyIDMwMyA5MyA0NyAxMTkgNTYgMTMxIDQ3IDggLTcgNDQgLTY4IDgwIC0xMzcgMzUgLTY5IDgwIC0xNTQgOTkgLTE5MCA1OCAtMTA4IDExNyAtMjE5IDE4MSAtMzQwIDMzIC02MyA2NCAtMTIwIDY5IC0xMjcgMTUgLTE5IDUgLTU2IC0xNyAtNjggLTExIC02IC0zOSAtMjMgLTYyIC0zOCAtMjQgLTE1IC00NSAtMjcgLTQ5IC0yNyAtMyAwIC0zMSAtMTcgLTYyIC0zNyAtMzEgLTIxIC0xMTEgLTcyIC0xNzkgLTExMyAtNjcgLTQxIC0yMDkgLTEyOCAtMzE1IC0xOTMgLTEwNiAtNjUgLTIwMiAtMTI0IC0yMTMgLTEzMCAtMTEgLTcgLTQzIC0yNyAtNzIgLTQ0IC0zMCAtMTggLTYxIC0zMyAtNzEgLTMzIC05IDAgLTYwIDI3IC0xMTIgNjAgLTUyIDMzIC0xMDQgNjQgLTExNSA3MCAtMTEgNiAtMzIgMTggLTQ3IDI4IC0zNSAyMiAtMzMyIDIwNCAtNDk1IDMwNCAtOTYgNTkgLTEzMCA3NSAtMTQwIDY2IC0xNCAtMTEgLTE4IC0xOCAtNzggLTEzNSAtMjEgLTQzIC01OCAtMTEyIC04MiAtMTUzIC0yNCAtNDEgLTQzIC03OCAtNDMgLTgxIDAgLTggMTc2IC0xMTggODA0IC00OTkgMTIyIC03NCAyMzYgLTE0NSAyNTMgLTE1NyAxNyAtMTMgNDAgLTIzIDUyIC0yMyAxOSAwIDE0MiA3MyA2MjYgMzcwIDExMCA2NyAyMTYgMTMxIDIzNSAxNDIgMTkgMTEgNDEgMjUgNDkgMzEgOCA3IDgwIDUyIDE2MiAxMDIgNDk5IDMwNCA3NjUgNDY3IDc5NiA0OTAgbDIyIDE2IC00NSA4NyBjLTI2IDQ4IC03OCAxNDggLTExNiAyMjIgLTM5IDc0IC03OCAxNDkgLTg4IDE2NSAtMTAgMTcgLTUyIDk2IC05MyAxNzYgLTQxIDgwIC04MSAxNTYgLTg5IDE3MCAtOSAxMyAtNDcgODUgLTg1IDE1OSAtODEgMTU3IC0xNDcgMjgwIC0yMTEgNDAwIC0yNiA0NyAtNTcgMTA2IC03MCAxMzMgLTE0IDI5IC0yOSA0NyAtNDAgNDcgLTkgMCAtNDMgLTE2IC03NSAtMzV6Ii8+PC9nPjwvc3ZnPjwvc3ZnPg==">
+    <link rel="icon" type="image/png" sizes="64x64" href="data:image/png;base64,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">
+    <link rel="apple-touch-icon" href="data:image/png;base64,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">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        base: 'var(--bg)',
+                        surface: 'var(--surface)',
+                        surface2: 'var(--surface2)',
+                        hairline: 'var(--hairline)',
+                        ink: 'var(--ink)',
+                        muted: 'var(--muted)',
+                        accent: 'var(--accent)',
+                        accentDim: 'var(--accent-dim)',
+                        danger: 'var(--danger)',
+                        success: 'var(--success)'
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', 'Inter', 'sans-serif'],
+                        mono: ['"SF Mono"', '"Fira Code"', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Marked.js (Markdown parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- DOMPurify (Security) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+
+    <!-- KaTeX (Math rendering) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Highlight.js (Syntax Highlighting) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljs-dark-theme">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Google Fonts (fallback) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg: #0A0A0C;
+            --surface: #151517;
+            --surface2: #1E1E21;
+            --hairline: #28282B;
+            --ink: #F2F2F0;
+            --muted: #8E8E93;
+            --accent: #5B9BD5;
+            --accent-dim: #4A82B0;
+            --accent-soft: rgba(91, 155, 213, 0.12);
+            --danger: #FF453A;
+            --success: #32D74B;
+            --warning: #FFB340;
+            --text-strong: #FFFFFF;
+            --shadow-card: 0 6px 24px rgba(0,0,0,0.4);
+            --bubble-bg: #1C3A54;
+            --bubble-border: rgba(91, 155, 213, 0.3);
+        }
+        html[data-theme="light"] {
+            --bg: #FAFAF9;
+            --surface: #FFFFFF;
+            --surface2: #F1F1F0;
+            --hairline: #E3E3E1;
+            --ink: #1C1C1E;
+            --muted: #6E6E73;
+            --accent: #1D4E76;
+            --accent-dim: #163C5C;
+            --accent-soft: rgba(29, 78, 118, 0.08);
+            --danger: #FF3B30;
+            --success: #248A3D;
+            --warning: #B26A00;
+            --text-strong: #000000;
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.06);
+            --bubble-bg: #E4EEF6;
+            --bubble-border: rgba(29, 78, 118, 0.18);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 4px; }
+
+        .prose pre { margin: 0 !important; padding: 0 !important; background: transparent !important; }
+        .prose p { margin-bottom: 1rem; line-height: 1.7; }
+        .prose p:last-child { margin-bottom: 0; }
+        .prose h1, .prose h2, .prose h3 { color: var(--ink); font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1rem; }
+        .prose li { margin-bottom: 0.5rem; }
+        .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+        /* Bold: brightest possible ink + heavier weight, NOT accent color.
+           Keeps multi-bold paragraphs clean instead of looking like confetti. */
+        .prose strong { color: var(--text-strong); font-weight: 700; }
+        .prose blockquote { border-left: 2px solid var(--accent); padding-left: 1rem; color: var(--muted); font-style: italic; }
+        .prose :not(pre) > code {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            background-color: var(--surface2);
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.3rem;
+            font-size: 0.85em;
+            color: var(--accent);
+        }
+
+        .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 0.9em; overflow-x: auto; display: block; }
+        .prose th, .prose td { border: 1px solid var(--hairline); padding: 0.7rem 1rem; text-align: left; }
+        .prose th { background-color: var(--surface2); color: var(--ink); font-weight: 600; }
+
+        .input-shell {
+            border: 1px solid var(--hairline);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            transition: border-color 0.25s ease;
+        }
+        html[data-theme="dark"] .input-shell { box-shadow: 0 8px 30px rgba(0,0,0,0.35); }
+        .input-shell:focus-within { border-color: var(--accent); }
+
+        .msg-container { width: 100%; padding: 1.1rem 0; }
+        .msg-content { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; position: relative; }
+
+        .msg-user .msg-content { display: flex; flex-direction: column; align-items: flex-end; }
+        .msg-user .bubble {
+            background: var(--bubble-bg);
+            border: 1px solid var(--bubble-border);
+            border-radius: 20px 20px 4px 20px;
+            padding: 0.7rem 1.1rem;
+            max-width: 85%;
+            box-shadow: var(--shadow-card);
+        }
+
+        /* Avatar orb container (pulsing ring removed per request — kept as a plain icon holder) */
+        .avatar-orb { position: relative; box-shadow: inset 0 0 0 1px var(--bubble-border); }
+
+        /* Living status dot */
+        .status-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--success);
+            display: inline-block;
+            margin-left: 6px;
+            animation: dotPulse 2.2s ease-in-out infinite;
+        }
+        @keyframes dotPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+        /* Message entrance */
+        @keyframes msgEnter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .msg-enter { animation: msgEnter 0.35s ease-out; }
+
+        header { box-shadow: var(--shadow-card); }
+
+        /* Voice overlay waveform bars */
+        .voice-bar {
+            width: 4px;
+            height: 28px;
+            border-radius: 3px;
+            background: var(--accent);
+            opacity: 0.6;
+            animation: voiceBar 1.1s ease-in-out infinite;
+        }
+        @keyframes voiceBar {
+            0%, 100% { height: 12px; opacity: 0.4; }
+            50% { height: 34px; opacity: 0.85; }
+        }
+        #voice-overlay.flex { display: flex; }
+
+        button:active { transform: scale(0.97); }
+        #send-button:active { transform: scale(0.9); }
+
+        .msg-ai .msg-content { display: flex; flex-direction: column; }
+
+        .sender-name { font-size: 0.78rem; font-weight: 600; margin-bottom: 0.4rem; letter-spacing: 0.01em; }
+        .sender-ai { color: var(--accent); }
+
+        .msg-actions { opacity: 0; transition: opacity 0.2s; display: flex; gap: 0.25rem; margin-top: 0.6rem; }
+        .msg-container:hover .msg-actions { opacity: 1; }
+        @media (hover: none) { .msg-actions { opacity: 1; } }
+
+        .thinking-pulse { animation: pulse-opacity 1.5s infinite ease-in-out; }
+        @keyframes pulse-opacity { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.9; } }
+
+        #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        #sidebar-overlay { transition: opacity 0.3s ease-in-out; }
+
+        .animate-fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .theme-toggle-icon { display: none; }
+        html[data-theme="dark"] .icon-sun { display: block; }
+        html[data-theme="light"] .icon-moon { display: block; }
+
+        .aegis-logo { display: block; flex-shrink: 0; }
+
+        /* Loading indicator: same left-aligned column as AI messages (was centered by flex) */
+        #loading-indicator.flex { display: block; }
+
+        /* ---------- Activity Steps ---------- */
+        .activity-block { margin: 0 0 0.6rem; }
+        .activity-toggle {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.28rem 0.7rem 0.28rem 0.6rem;
+            border: 1px solid var(--hairline); border-radius: 999px;
+            background: var(--surface); color: var(--muted);
+            font-size: 0.78rem; font-weight: 500; cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+        .activity-toggle:hover { color: var(--ink); border-color: var(--accent); }
+        .activity-toggle[aria-expanded="true"] { color: var(--ink); border-color: var(--accent); background: var(--accent-soft); }
+        .activity-mark { color: var(--success); font-weight: 700; }
+        .activity-toggle.is-failed .activity-mark { color: var(--warning); }
+        .activity-chevron { font-size: 0.7rem; transition: transform 0.2s ease; }
+        .activity-toggle[aria-expanded="true"] .activity-chevron { transform: rotate(180deg); }
+        .activity-panel {
+            margin-top: 0.55rem; padding: 0.75rem 0.9rem;
+            background: var(--surface); border: 1px solid var(--hairline);
+            border-radius: 14px; max-width: 26rem;
+            animation: fadeIn 0.25s ease-out;
+        }
+        .activity-panel[hidden] { display: none; }
+        .activity-panel-title {
+            font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--muted); font-weight: 600; margin-bottom: 0.55rem;
+        }
+        .activity-list { list-style: none; margin: 0; padding: 0; }
+        .activity-item { display: flex; gap: 0.6rem; position: relative; padding-bottom: 0.6rem; }
+        .activity-item:last-child { padding-bottom: 0; }
+        .activity-item:not(:last-child)::before {
+            content: ''; position: absolute; left: 0.42rem; top: 1.15rem; bottom: 0.15rem;
+            width: 1px; background: var(--hairline);
+        }
+        .activity-dot { flex: 0 0 0.85rem; width: 0.85rem; text-align: center; font-size: 0.7rem; line-height: 1.25rem; color: var(--accent); }
+        .activity-item.status-success .activity-dot { color: var(--success); font-weight: 700; }
+        .activity-item.status-warning .activity-dot { color: var(--warning); }
+        .activity-item.status-error .activity-dot { color: var(--danger); }
+        .activity-title { font-size: 0.82rem; font-weight: 500; color: var(--ink); line-height: 1.25rem; }
+        .activity-item.status-warning .activity-title { color: var(--warning); }
+        .activity-item.status-error .activity-title { color: var(--danger); }
+        .activity-desc { font-size: 0.74rem; color: var(--muted); line-height: 1.15rem; }
+
+        /* ---------- Image attachments ---------- */
+        .attach-thumb { position: relative; width: 56px; height: 56px; border-radius: 12px; overflow: hidden; border: 1px solid var(--hairline); background: var(--surface); }
+        .attach-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .attach-thumb button { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,0.65); color: #fff; font-size: 12px; line-height: 18px; text-align: center; }
+        .bubble-images { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.45rem; }
+        .bubble-images img { width: 88px; height: 88px; object-fit: cover; border-radius: 12px; border: 1px solid var(--bubble-border); }
+        .bubble-image-tag { font-size: 0.75rem; color: var(--muted); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden bg-base">
+
+    <!-- AEGIS logo (single definition, reused via <use>; color follows currentColor) -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="aegis-logo" viewBox="12 22.5 470 470">
+            <g transform="translate(0, 512) scale(0.1, -0.1)" fill="currentColor" stroke="none">
+                <path d="M2155 4650 c-170 -104 -438 -266 -595 -361 -157 -95 -303 -184 -325 -199 -22 -15 -47 -30 -55 -34 -8 -4 -24 -12 -35 -19 -52 -32 -103 -63 -120 -74 -172 -103 -351 -213 -393 -239 l-52 -34 2 -1079 c2 -594 6 -1082 10 -1086 6 -6 90 35 153 76 17 10 37 22 45 26 8 4 48 26 88 50 41 24 75 43 77 43 2 0 47 26 102 58 54 32 139 80 188 106 50 26 97 53 105 60 16 12 30 20 123 71 96 52 320 182 339 197 9 7 44 67 79 133 34 66 81 156 104 200 23 44 68 130 100 190 32 61 74 142 95 180 20 39 61 115 90 170 29 55 69 129 88 165 19 36 59 112 90 170 30 58 65 123 77 145 13 22 46 85 75 140 29 55 68 129 87 165 20 36 56 103 81 150 24 47 61 114 80 150 19 36 50 94 70 130 19 36 50 93 68 127 19 34 34 66 34 72 0 8 -185 125 -333 210 -23 13 -71 43 -107 66 -75 49 -105 65 -117 64 -4 0 -147 -85 -318 -189z m-205 -655 c0 -8 -11 -34 -24 -57 -13 -24 -37 -68 -54 -98 -17 -31 -55 -103 -85 -160 -29 -58 -77 -149 -105 -202 -29 -54 -75 -141 -102 -193 -28 -52 -61 -114 -74 -137 -12 -24 -51 -97 -86 -163 -34 -66 -79 -151 -100 -190 -83 -155 -157 -296 -216 -410 -34 -66 -68 -120 -75 -120 -20 0 -26 1152 -7 1178 7 9 110 76 228 149 294 180 489 300 590 364 89 56 110 64 110 39z"/>
+                <path d="M3188 4383 c-9 -10 -36 -56 -61 -103 -24 -47 -65 -124 -91 -172 -25 -47 -46 -93 -46 -102 0 -9 -5 -16 -10 -16 -6 0 -14 -8 -17 -17 -4 -10 -19 -39 -35 -65 -15 -26 -44 -80 -65 -120 -20 -40 -53 -100 -73 -133 -20 -33 -48 -82 -62 -110 -14 -27 -47 -88 -73 -135 -90 -166 -86 -137 -29 -248 171 -331 189 -362 208 -362 10 0 41 14 68 30 26 17 50 30 53 30 2 0 24 14 48 30 25 17 49 30 54 30 5 0 31 15 59 33 59 37 65 41 181 106 48 28 98 57 111 66 23 16 29 44 13 60 -5 6 -37 64 -71 130 -34 66 -77 147 -95 180 -18 33 -55 103 -82 155 -190 360 -185 350 -156 349 10 0 30 -8 45 -17 15 -9 81 -51 148 -92 67 -41 132 -82 145 -90 77 -48 213 -133 230 -143 11 -7 49 -30 85 -53 36 -22 104 -64 152 -93 48 -30 92 -59 97 -65 7 -8 11 -171 13 -422 3 -349 5 -413 19 -439 8 -16 38 -73 66 -125 51 -96 126 -240 235 -450 75 -144 90 -170 100 -170 4 0 8 418 8 928 l0 928 -42 27 c-55 34 -538 328 -728 443 -80 48 -198 120 -263 161 -64 40 -119 73 -121 73 -1 0 -10 -8 -18 -17z"/>
+                <path d="M3447 2925 c-32 -19 -60 -35 -63 -35 -2 0 -23 -12 -47 -27 -23 -15 -62 -38 -87 -50 -25 -13 -52 -28 -60 -33 -33 -21 -172 -100 -176 -100 -4 0 -197 -112 -224 -130 -8 -6 -22 -13 -30 -17 -8 -4 -48 -26 -88 -50 -41 -24 -75 -43 -78 -43 -2 0 -49 -27 -105 -60 -55 -33 -102 -60 -104 -60 -2 0 -48 -25 -102 -56 -54 -31 -143 -83 -198 -114 -221 -126 -326 -186 -445 -255 -69 -40 -210 -121 -315 -180 -104 -59 -243 -138 -307 -176 -64 -38 -119 -69 -122 -69 -12 0 -206 -122 -206 -130 0 -4 73 -52 163 -106 89 -54 199 -122 245 -152 46 -29 90 -52 99 -50 18 3 18 3 137 231 48 93 92 178 99 189 7 11 41 33 77 50 64 30 185 88 515 248 94 45 231 112 305 147 171 83 470 228 622 303 93 47 119 56 131 47 8 -7 44 -68 80 -137 35 -69 80 -154 99 -190 58 -108 117 -219 181 -340 33 -63 64 -120 69 -127 15 -19 5 -56 -17 -68 -11 -6 -39 -23 -62 -38 -24 -15 -45 -27 -49 -27 -3 0 -31 -17 -62 -37 -31 -21 -111 -72 -179 -113 -67 -41 -209 -128 -315 -193 -106 -65 -202 -124 -213 -130 -11 -7 -43 -27 -72 -44 -30 -18 -61 -33 -71 -33 -9 0 -60 27 -112 60 -52 33 -104 64 -115 70 -11 6 -32 18 -47 28 -35 22 -332 204 -495 304 -96 59 -130 75 -140 66 -14 -11 -18 -18 -78 -135 -21 -43 -58 -112 -82 -153 -24 -41 -43 -78 -43 -81 0 -8 176 -118 804 -499 122 -74 236 -145 253 -157 17 -13 40 -23 52 -23 19 0 142 73 626 370 110 67 216 131 235 142 19 11 41 25 49 31 8 7 80 52 162 102 499 304 765 467 796 490 l22 16 -45 87 c-26 48 -78 148 -116 222 -39 74 -78 149 -88 165 -10 17 -52 96 -93 176 -41 80 -81 156 -89 170 -9 13 -47 85 -85 159 -81 157 -147 280 -211 400 -26 47 -57 106 -70 133 -14 29 -29 47 -40 47 -9 0 -43 -16 -75 -35z"/>
+            </g>
+        </symbol>
+    </svg>
+
+
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden opacity-0" onclick="toggleSidebar()"></div>
+
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-base border-r border-hairline z-50 transform -translate-x-full md:relative md:translate-x-0 flex flex-col h-full">
+        <div class="p-4 border-b border-hairline flex justify-between items-center">
+            <button onclick="startNewChat()" class="flex-1 flex items-center gap-2 bg-accent hover:bg-accentDim text-white py-2.5 px-4 rounded-xl transition-colors">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span class="font-medium text-sm">New Chat</span>
+            </button>
+            <button onclick="toggleSidebar()" class="md:hidden ml-2 p-2 text-muted hover:text-ink">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div class="px-4 pb-3">
+            <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-muted absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="sidebar-search" oninput="renderSidebar()" placeholder="Search conversations..." class="w-full bg-surface border border-hairline rounded-lg py-2 pl-8 pr-3 text-xs text-ink placeholder-muted outline-none focus:border-accent transition-colors">
+            </div>
+        </div>
+
+        <div class="flex-1 overflow-y-auto px-3 pb-3" id="history-list"></div>
+
+        <div class="p-3 border-t border-hairline flex items-center gap-2.5">
+            <div id="profile-avatar" class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold shrink-0" style="background: var(--accent-soft); color: var(--accent);">A</div>
+            <div class="flex-1 min-w-0">
+                <p id="profile-name" class="text-xs font-medium text-ink truncate">Guest</p>
+                <p id="profile-sub" class="text-[11px] text-muted truncate">Personal Assistant</p>
+            </div>
+            <button onclick="toggleSettingsModal()" class="p-1.5 text-muted hover:text-accent rounded-lg hover:bg-surface transition-colors shrink-0" title="Settings">
+                <i data-lucide="settings" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen relative min-w-0">
+
+        <header class="h-16 flex items-center justify-between px-4 sm:px-6 bg-base/90 backdrop-blur-md border-b border-hairline z-10 shrink-0">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden p-2 -ml-2 text-muted hover:text-ink rounded-lg">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div id="header-orb" class="w-8 h-8 flex items-center justify-center text-accent shrink-0">
+                    <svg class="aegis-logo w-8 h-8" aria-hidden="true"><use href="#aegis-logo"/></svg>
+                </div>
+                <h1 class="text-base font-semibold tracking-wide text-ink flex items-center">AEGIS<span class="status-dot" title="Online"></span></h1>
+            </div>
+        </header>
+
+        <div id="settings-modal" class="fixed inset-0 bg-base z-50 hidden overflow-y-auto">
+            <div class="max-w-lg mx-auto min-h-screen flex flex-col">
+                <div class="h-16 flex items-center gap-3 px-4 sm:px-6 border-b border-hairline sticky top-0 bg-base/90 backdrop-blur-md z-10">
+                    <button onclick="toggleSettingsModal()" class="p-2 -ml-2 text-muted hover:text-ink rounded-lg">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <h3 class="text-base font-semibold text-ink">Settings</h3>
+                </div>
+
+                <form id="settings-form" onsubmit="saveUserSettings(event)" class="flex-1 p-5 space-y-8">
+
+                    <!-- Profile Section -->
+                    <div>
+                        <h4 class="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Profile</h4>
+                        <div class="bg-surface border border-hairline rounded-2xl p-4">
+                            <div class="flex items-center gap-3 mb-4">
+                                <div id="settings-avatar" class="w-14 h-14 rounded-full flex items-center justify-center text-lg font-semibold shrink-0" style="background: var(--accent-soft); color: var(--accent);">A</div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-medium text-ink" id="settings-avatar-name">Guest</p>
+                                    <p class="text-xs text-muted">Tap fields below to edit</p>
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-muted mb-1.5">Name</label>
+                                    <input type="text" id="user-name" oninput="previewProfileName()" placeholder="e.g. Rahul" class="w-full bg-base border border-hairline rounded-xl p-2.5 text-sm text-ink outline-none focus:border-accent transition-colors">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-muted mb-1.5">Profession / Field</label>
+                                    <input type="text" id="user-profession" placeholder="e.g. Web Developer, Student" class="w-full bg-base border border-hairline rounded-xl p-2.5 text-sm text-ink outline-none focus:border-accent transition-colors">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personalization Section -->
+                    <div>
+                        <h4 class="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Personalization</h4>
+                        <div class="bg-surface border border-hairline rounded-2xl p-4">
+                            <label class="block text-xs font-medium text-muted mb-1.5">About You & Preferences</label>
+                            <textarea id="user-about" rows="4" placeholder="e.g. I prefer concise code snippets in Python, simple explanations, and technical depth when asked." class="w-full bg-base border border-hairline rounded-xl p-2.5 text-sm text-ink outline-none focus:border-accent resize-none transition-colors"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Appearance Section -->
+                    <div>
+                        <h4 class="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Appearance</h4>
+                        <div class="bg-surface border border-hairline rounded-2xl p-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="sun-moon" class="w-4 h-4 text-accent"></i>
+                                <span class="text-sm text-ink">Theme</span>
+                            </div>
+                            <button type="button" onclick="toggleTheme()" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-base border border-hairline text-xs text-ink hover:border-accent transition-colors">
+                                <i data-lucide="sun" class="w-3.5 h-3.5 icon-sun theme-toggle-icon"></i>
+                                <i data-lucide="moon" class="w-3.5 h-3.5 icon-moon theme-toggle-icon"></i>
+                                <span id="theme-label">Light</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-2 pt-2 pb-4">
+                        <button type="button" onclick="toggleSettingsModal()" class="px-4 py-2 text-sm text-muted hover:text-ink">Cancel</button>
+                        <button type="submit" class="px-5 py-2 text-sm bg-accent hover:bg-accentDim text-white font-medium rounded-xl transition-all">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <main id="chat-container" class="flex-1 overflow-y-auto scroll-smooth pb-40 relative">
+
+            <div id="welcome-screen" class="h-full flex flex-col items-center justify-center text-center p-6 animate-fade-in overflow-y-auto">
+                <div class="w-20 h-20 flex items-center justify-center text-accent mb-6">
+                    <svg class="aegis-logo w-20 h-20" aria-hidden="true"><use href="#aegis-logo"/></svg>
+                </div>
+                <h2 class="text-2xl font-semibold text-ink mb-2.5" id="welcome-title">How can I help?</h2>
+                <p class="text-muted max-w-md text-sm sm:text-base mb-8">Ask anything, explore an idea, or let's build something together.</p>
+
+                <div class="grid grid-cols-2 gap-3 w-full max-w-md text-left">
+                    <button onclick="useSuggestion('Help me build a project. Ask me what I want to create and guide me step by step.')" class="p-3.5 rounded-xl bg-surface border border-hairline hover:border-accent transition-colors">
+                        <i data-lucide="layout-template" class="w-4 h-4 text-accent mb-2"></i>
+                        <p class="text-xs font-medium text-ink">Help me build a project</p>
+                        <p class="text-[11px] text-muted mt-0.5">Turn your idea into a plan</p>
+                    </button>
+                    <button onclick="useSuggestion('Explain something to me in simple, clear terms.')" class="p-3.5 rounded-xl bg-surface border border-hairline hover:border-accent transition-colors">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-accent mb-2"></i>
+                        <p class="text-xs font-medium text-ink">Explain something</p>
+                        <p class="text-[11px] text-muted mt-0.5">Get clear, simple answers</p>
+                    </button>
+                    <button onclick="useSuggestion('Help me analyze and summarize some information, and find key insights.')" class="p-3.5 rounded-xl bg-surface border border-hairline hover:border-accent transition-colors">
+                        <i data-lucide="search" class="w-4 h-4 text-accent mb-2"></i>
+                        <p class="text-xs font-medium text-ink">Analyze my files</p>
+                        <p class="text-[11px] text-muted mt-0.5">Summarize, find insights</p>
+                    </button>
+                    <button onclick="useSuggestion('Help me plan my day so I stay focused and productive.')" class="p-3.5 rounded-xl bg-surface border border-hairline hover:border-accent transition-colors">
+                        <i data-lucide="calendar" class="w-4 h-4 text-accent mb-2"></i>
+                        <p class="text-xs font-medium text-ink">Plan my day</p>
+                        <p class="text-[11px] text-muted mt-0.5">Stay focused and productive</p>
+                    </button>
+                </div>
+            </div>
+
+            <div id="messages-wrapper" class="hidden pb-4"></div>
+
+            <div id="loading-indicator" class="hidden msg-container msg-ai">
+                <div class="msg-content">
+                    <div class="sender-name sender-ai flex items-center gap-2">AEGIS</div>
+                    <div class="flex items-center gap-2 mt-1 text-accent thinking-pulse font-medium text-sm">
+                        <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Thinking&hellip;
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="absolute bottom-0 left-0 right-0 pt-12 pb-6 px-4 md:px-8" style="background: linear-gradient(to top, var(--bg) 60%, transparent);">
+            <div id="stop-btn-container" class="hidden absolute -top-2 left-1/2 transform -translate-x-1/2 z-20">
+                <button onclick="stopGeneration()" class="bg-surface border border-hairline text-ink px-4 py-1.5 rounded-full flex items-center gap-2 text-sm hover:bg-surface2 shadow-lg transition-colors">
+                    <i data-lucide="square" class="w-3.5 h-3.5 text-danger fill-danger"></i> Stop Generating
+                </button>
+            </div>
+
+            <div class="max-w-3xl mx-auto relative">
+                <div id="attachment-preview" class="hidden flex-wrap gap-2 mb-2 px-1"></div>
+                <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="hidden">
+                <form id="chat-form" class="relative flex items-end gap-1 bg-surface rounded-3xl p-2 input-shell">
+                    <button type="button" onclick="handleAttachClick()" class="p-2.5 rounded-full text-muted hover:text-accent hover:bg-surface2 transition-all flex-shrink-0 mb-1" title="Attach file">
+                        <i data-lucide="paperclip" class="w-4.5 h-4.5"></i>
+                    </button>
+
+                    <textarea
+                        id="user-input"
+                        rows="1"
+                        maxlength="4000"
+                        class="w-full max-h-48 bg-transparent text-ink placeholder-muted p-3 outline-none resize-none overflow-y-auto text-[15px]"
+                        placeholder="Message AEGIS..."
+                        required
+                    ></textarea>
+
+                    <button type="button" onclick="openVoiceOverlay()" class="p-2.5 rounded-full text-muted hover:text-accent hover:bg-surface2 transition-all flex-shrink-0 mb-1" title="Voice input">
+                        <i data-lucide="mic" class="w-4.5 h-4.5"></i>
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="send-button"
+                        class="p-2.5 rounded-full bg-accent text-white hover:bg-accentDim transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0 flex items-center justify-center mb-1 mr-1"
+                        title="Send Message"
+                    >
+                        <i data-lucide="arrow-up" class="w-4.5 h-4.5 font-bold"></i>
+                    </button>
+                </form>
+                <div class="flex items-center justify-between mt-2.5 px-1">
+                    <span class="text-xs text-muted">AEGIS can make mistakes. Verify important info.</span>
+                    <span id="char-counter" class="text-[11px] text-muted shrink-0 ml-2">0/4000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voice Interaction Overlay -->
+        <div id="voice-overlay" class="hidden fixed inset-0 z-[60] flex-col items-center justify-center bg-base">
+            <button onclick="closeVoiceOverlay()" class="absolute top-5 left-5 p-2 text-muted hover:text-ink rounded-lg">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-10">
+                <div class="voice-bar" style="animation-delay:0s"></div>
+                <div class="voice-bar" style="animation-delay:0.15s"></div>
+                <div class="w-28 h-28 flex items-center justify-center text-accent shrink-0">
+                    <svg class="aegis-logo w-28 h-28" aria-hidden="true"><use href="#aegis-logo"/></svg>
+                </div>
+                <div class="voice-bar" style="animation-delay:0.3s"></div>
+                <div class="voice-bar" style="animation-delay:0.45s"></div>
+            </div>
+            <h3 id="voice-title" class="text-xl font-semibold text-ink mb-1.5">Listening&hellip;</h3>
+            <p id="voice-subtitle" class="text-sm text-muted mb-10 px-6 text-center">Speak naturally, I'm listening.</p>
+            <div class="flex items-center gap-3">
+                <button onclick="closeVoiceOverlay()" class="px-5 py-2 rounded-full border border-hairline text-ink text-sm flex items-center gap-2 hover:bg-surface transition-colors">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i> Cancel
+                </button>
+                <button id="voice-send-btn" onclick="sendVoiceRecording()" disabled class="px-5 py-2 rounded-full bg-accent text-white text-sm flex items-center gap-2 hover:bg-accentDim transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i> Send
+                </button>
+            </div>
+            <p class="absolute bottom-6 text-[11px] text-muted">Tap Send when you're done. Replies are read aloud in English.</p>
+        </div>
+    </div>
+
+    <script>
+    lucide.createIcons();
+
+    const MODEL_URL = "/api/chat";
+    const CONTEXT_WINDOW_SIZE = 8;
+    const STORAGE_KEY = "aegis_chat_sessions";
+    const USER_PROFILE_KEY = "aegis_user_profile";
+    const THEME_KEY = "aegis_theme";
+
+    let currentAbortController = null;
+    let isGenerating = false;
+
+    let chatSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    let activeSessionId = localStorage.getItem('aegis_active_session');
+
+    const ui = {
+        form: document.getElementById("chat-form"),
+        input: document.getElementById("user-input"),
+        sendBtn: document.getElementById("send-button"),
+        welcomeScreen: document.getElementById("welcome-screen"),
+        welcomeTitle: document.getElementById("welcome-title"),
+        messagesWrapper: document.getElementById("messages-wrapper"),
+        loadingIndicator: document.getElementById("loading-indicator"),
+        chatContainer: document.getElementById("chat-container"),
+        stopBtnContainer: document.getElementById("stop-btn-container"),
+        sidebar: document.getElementById("sidebar"),
+        sidebarOverlay: document.getElementById("sidebar-overlay"),
+        historyList: document.getElementById("history-list"),
+        settingsModal: document.getElementById("settings-modal")
+    };
+
+    // --- THEME ---
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const hljsLink = document.getElementById('hljs-dark-theme');
+        hljsLink.href = theme === 'light'
+            ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css'
+            : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css';
+        const label = document.getElementById('theme-label');
+        if (label) label.textContent = theme === 'light' ? 'Light' : 'Dark';
+    }
+
+    window.toggleTheme = function() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'light' ? 'dark' : 'light';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+    };
+
+    (function initTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        applyTheme(saved === 'dark' ? 'dark' : 'light');
+    })();
+
+    // --- PERSONALIZATION SETTINGS ---
+    function loadUserSettings() {
+        const profile = JSON.parse(localStorage.getItem(USER_PROFILE_KEY)) || {};
+        document.getElementById("user-name").value = profile.name || "";
+        document.getElementById("user-profession").value = profile.profession || "";
+        document.getElementById("user-about").value = profile.about || "";
+
+        if (profile.name) {
+            ui.welcomeTitle.innerText = `How can I help, ${profile.name}?`;
+        } else {
+            ui.welcomeTitle.innerText = "How can I help?";
+        }
+
+        const avatarEl = document.getElementById('profile-avatar');
+        const nameEl = document.getElementById('profile-name');
+        const subEl = document.getElementById('profile-sub');
+        const settingsAvatarEl = document.getElementById('settings-avatar');
+        const settingsNameEl = document.getElementById('settings-avatar-name');
+        if (profile.name) {
+            const initials = profile.name.trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+            avatarEl.textContent = initials || 'A';
+            nameEl.textContent = profile.name;
+            subEl.textContent = profile.profession || 'Personal Assistant';
+            if (settingsAvatarEl) settingsAvatarEl.textContent = initials || 'A';
+            if (settingsNameEl) settingsNameEl.textContent = profile.name;
+        } else {
+            avatarEl.textContent = 'A';
+            nameEl.textContent = 'Guest';
+            subEl.textContent = 'Personal Assistant';
+            if (settingsAvatarEl) settingsAvatarEl.textContent = 'A';
+            if (settingsNameEl) settingsNameEl.textContent = 'Guest';
+        }
+    }
+
+    window.previewProfileName = function() {
+        const val = document.getElementById('user-name').value.trim();
+        const settingsAvatarEl = document.getElementById('settings-avatar');
+        const settingsNameEl = document.getElementById('settings-avatar-name');
+        if (val) {
+            const initials = val.split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+            settingsAvatarEl.textContent = initials || 'A';
+            settingsNameEl.textContent = val;
+        } else {
+            settingsAvatarEl.textContent = 'A';
+            settingsNameEl.textContent = 'Guest';
+        }
+    };
+
+    window.toggleSettingsModal = function() {
+        ui.settingsModal.classList.toggle("hidden");
+    };
+
+    window.saveUserSettings = function(e) {
+        e.preventDefault();
+        const profile = {
+            name: document.getElementById("user-name").value.trim(),
+            profession: document.getElementById("user-profession").value.trim(),
+            about: document.getElementById("user-about").value.trim()
+        };
+        localStorage.setItem(USER_PROFILE_KEY, JSON.stringify(profile));
+        loadUserSettings();
+        toggleSettingsModal();
+    };
+
+    // --- SIDEBAR LOGIC ---
+    window.toggleSidebar = function() {
+        const isOpen = !ui.sidebar.classList.contains('-translate-x-full');
+        if (isOpen) {
+            ui.sidebar.classList.add('-translate-x-full');
+            ui.sidebarOverlay.classList.add('hidden');
+            ui.sidebarOverlay.classList.remove('opacity-100');
+        } else {
+            ui.sidebar.classList.remove('-translate-x-full');
+            ui.sidebarOverlay.classList.remove('hidden');
+            setTimeout(() => ui.sidebarOverlay.classList.add('opacity-100'), 10);
+        }
+    };
+
+    function saveSessions() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatSessions));
+        if(activeSessionId) localStorage.setItem('aegis_active_session', activeSessionId);
+        else localStorage.removeItem('aegis_active_session');
+    }
+
+    function formatSessionTime(ts) {
+        const d = new Date(ts);
+        const now = new Date();
+        const isToday = d.toDateString() === now.toDateString();
+        if (isToday) return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+
+    function renderSidebar() {
+        ui.historyList.innerHTML = '';
+        const searchInput = document.getElementById('sidebar-search');
+        const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+
+        const filtered = chatSessions
+            .filter(s => !query || (s.title || '').toLowerCase().includes(query))
+            .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+
+        if(filtered.length === 0) {
+            ui.historyList.innerHTML = `<div class="text-muted text-sm text-center mt-4">${query ? 'No matching conversations' : 'No previous conversations'}</div>`;
+            return;
+        }
+
+        filtered.forEach(session => {
+            const btn = document.createElement('div');
+            const isActive = session.id === activeSessionId;
+            btn.className = `w-full text-left p-2.5 rounded-xl mb-1 flex items-center justify-between group transition-colors cursor-pointer ${isActive ? 'text-accent border' : 'text-ink hover:bg-surface border border-transparent'}`;
+            if (isActive) {
+                btn.style.background = 'var(--accent-soft)';
+                btn.style.borderColor = 'var(--accent)';
+            }
+
+            btn.innerHTML = `
+                <div class="flex items-center gap-2 overflow-hidden flex-1" onclick="loadSession('${session.id}')">
+                    <span class="text-sm truncate select-none flex-1">${escapeHtml(session.title || 'New Conversation')}</span>
+                    <span class="text-[10px] text-muted shrink-0">${formatSessionTime(session.updatedAt || Date.now())}</span>
+                </div>
+                <div class="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity ml-1">
+                    <button onclick="renameSession(event, '${session.id}')" class="text-muted hover:text-accent p-1 rounded hover:bg-surface2" title="Rename">
+                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="deleteSession(event, '${session.id}')" class="text-muted hover:text-danger p-1 rounded hover:bg-surface2" title="Delete">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            `;
+            ui.historyList.appendChild(btn);
+        });
+        lucide.createIcons({ root: ui.historyList });
+    }
+
+    window.renameSession = function(e, sessionId) {
+        e.stopPropagation();
+        const session = chatSessions.find(s => s.id === sessionId);
+        if(!session) return;
+
+        const newTitle = prompt("Enter new name for this chat:", session.title);
+        if(newTitle !== null && newTitle.trim() !== "") {
+            session.title = newTitle.trim();
+            saveSessions();
+            renderSidebar();
+        }
+    };
+
+    window.startNewChat = function() {
+        if(window.innerWidth < 768) toggleSidebar();
+        activeSessionId = null;
+        localStorage.removeItem('aegis_active_session');
+        ui.messagesWrapper.innerHTML = "";
+        ui.messagesWrapper.classList.add("hidden");
+        ui.welcomeScreen.classList.remove("hidden");
+        ui.input.value = "";
+        ui.input.style.height = "auto";
+        ui.input.focus();
+        renderSidebar();
+    };
+
+    window.loadSession = function(sessionId) {
+        if(isGenerating) return;
+        if(window.innerWidth < 768) toggleSidebar();
+
+        activeSessionId = sessionId;
+        saveSessions();
+        renderSidebar();
+
+        const session = chatSessions.find(s => s.id === sessionId);
+        if(session) {
+            ui.welcomeScreen.classList.add("hidden");
+            ui.messagesWrapper.innerHTML = "";
+            ui.messagesWrapper.classList.remove("hidden");
+
+            session.messages.forEach((msg, index) => {
+                const msgDiv = appendMessage(msg.role, msg.parts[0].text, index, false, msg.activity);
+                if (msg.role === "user" && msg.imageCount) decorateUserBubble(msgDiv, null, msg.imageCount);
+            });
+            setTimeout(scrollToBottom, 100);
+        }
+    };
+
+    window.deleteSession = function(e, sessionId) {
+        e.stopPropagation();
+        if(confirm("Are you sure you want to delete this chat?")) {
+            chatSessions = chatSessions.filter(s => s.id !== sessionId);
+            if(activeSessionId === sessionId) {
+                startNewChat();
+            } else {
+                saveSessions();
+                renderSidebar();
+            }
+        }
+    };
+
+    // --- UTILITIES ---
+    function escapeHtml(unsafe) {
+        if(!unsafe) return "";
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function formatAndSecureText(text) {
+        const rawHtml = marked.parse(text);
+        return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['target'] });
+    }
+
+    function applyEnhancements(msgDiv) {
+        const markdownBody = msgDiv.querySelector('.markdown-body');
+        if(!markdownBody) return;
+
+        renderMathInElement(markdownBody, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            throwOnError: false
+        });
+
+        const preTags = markdownBody.querySelectorAll('pre');
+        preTags.forEach(pre => {
+            if(pre.parentNode.classList.contains('code-block-wrapper')) return;
+
+            const codeEl = pre.querySelector('code');
+            if(!codeEl) return;
+
+            const rawCodeText = codeEl.innerText;
+            const language = codeEl.className.replace('language-', '') || 'code';
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper relative mt-4 mb-4 rounded-xl overflow-hidden border border-hairline shadow-md';
+
+            wrapper.innerHTML = `
+                <div class="bg-surface text-muted text-xs px-4 py-2 flex justify-between items-center border-b border-hairline">
+                    <span class="font-mono capitalize">${language}</span>
+                    <button class="hover:text-ink transition-colors flex items-center gap-1.5 copy-btn" title="Copy Code">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copy</span>
+                    </button>
+                </div>
+                <div class="overflow-x-auto bg-base p-4">
+                    <pre class="!m-0 !p-0"><code class="hljs text-sm">${escapeHtml(rawCodeText)}</code></pre>
+                </div>
+            `;
+
+            pre.parentNode.replaceChild(wrapper, pre);
+            const newCode = wrapper.querySelector('code');
+            hljs.highlightElement(newCode);
+
+            const copyBtn = wrapper.querySelector('.copy-btn');
+            lucide.createIcons({ root: wrapper });
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(rawCodeText).then(() => {
+                    copyBtn.innerHTML = `<i data-lucide="check" class="w-3.5 h-3.5 text-success"></i> <span class="text-success">Copied!</span>`;
+                    lucide.createIcons({ root: copyBtn });
+                    setTimeout(() => {
+                        copyBtn.innerHTML = `<i data-lucide="copy" class="w-3.5 h-3.5"></i> <span>Copy</span>`;
+                        lucide.createIcons({ root: copyBtn });
+                    }, 2000);
+                });
+            });
+        });
+    }
+
+    window.copyMessage = function(button, text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const icon = button.querySelector('i');
+            icon.setAttribute('data-lucide', 'check');
+            icon.classList.add('text-success');
+            lucide.createIcons({ root: button });
+            setTimeout(() => {
+                icon.setAttribute('data-lucide', 'copy');
+                icon.classList.remove('text-success');
+                lucide.createIcons({ root: button });
+            }, 2000);
+        });
+    };
+
+    ui.input.addEventListener("input", function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 200) + "px";
+        if (this.value.trim() === "") this.style.height = "auto";
+        const counter = document.getElementById('char-counter');
+        if (counter) counter.textContent = `${this.value.length}/4000`;
+    });
+
+    window.useSuggestion = function(text) {
+        ui.input.value = text;
+        ui.input.dispatchEvent(new Event('input'));
+        ui.input.focus();
+    };
+
+    // (attach + voice handlers live in the "IMAGE ATTACHMENTS" and "VOICE" sections below)
+
+    function scrollToBottom() {
+        ui.chatContainer.scrollTo({ top: ui.chatContainer.scrollHeight, behavior: "smooth" });
+    }
+
+    function appendMessage(role, text, id = null, animate = true, activity = null) {
+        ui.welcomeScreen.classList.add("hidden");
+        ui.messagesWrapper.classList.remove("hidden");
+
+        const isUser = role === "user";
+        const msgDiv = document.createElement("div");
+        msgDiv.className = `msg-container ${isUser ? "msg-user" : "msg-ai"}${animate ? " msg-enter" : ""}`;
+        if(id !== null) msgDiv.dataset.id = id;
+
+        const senderHeader = isUser ? '' : `<div class="sender-name sender-ai">AEGIS</div>`;
+
+        let actionsHtml = `<div class="msg-actions">`;
+        if (isUser) {
+            actionsHtml += `<button onclick="editMessage('${id}')" class="text-muted hover:text-accent p-1" title="Edit"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>`;
+        } else {
+            actionsHtml += `<button onclick="copyMessage(this, \`${escapeHtml(text)}\`)" class="text-muted hover:text-accent p-1" title="Copy"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>`;
+            actionsHtml += `<button onclick="regenerateResponse('${id}')" class="text-muted hover:text-accent p-1" title="Regenerate"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>`;
+        }
+        actionsHtml += `</div>`;
+
+        if (isUser) {
+            msgDiv.innerHTML = `
+                <div class="msg-content">
+                    <div class="bubble">
+                        <div class="text-[15px] text-ink markdown-body">${DOMPurify.sanitize(text).replace(/\n/g, "<br>")}</div>
+                    </div>
+                    ${actionsHtml}
+                </div>
+            `;
+        } else {
+            msgDiv.innerHTML = `
+                <div class="msg-content">
+                    ${senderHeader}
+                    <div class="w-full overflow-hidden">
+                        <div class="prose prose-invert max-w-none text-[15px] text-ink markdown-body">
+                            ${formatAndSecureText(text)}
+                        </div>
+                        ${actionsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        ui.messagesWrapper.appendChild(msgDiv);
+        lucide.createIcons({ root: msgDiv });
+
+        // Activity Steps: "Show thinking" toggle sits where "Thinking..." was
+        if (!isUser && Array.isArray(activity) && activity.length > 0) {
+            const content = msgDiv.querySelector('.msg-content');
+            content.insertBefore(buildActivityBlock(activity), content.querySelector('.w-full'));
+        }
+
+        if (!isUser) {
+            applyEnhancements(msgDiv);
+        }
+
+        if(animate) scrollToBottom();
+        return msgDiv;
+    }
+
+    async function streamMessageEffect(msgDiv, fullText) {
+        const markdownBody = msgDiv.querySelector('.markdown-body');
+        markdownBody.innerHTML = '<span class="typing-cursor inline-block w-2 h-4 animate-pulse ml-1" style="background: var(--accent);"></span>';
+
+        let currentText = "";
+        const chunkSize = 3;
+
+        for (let i = 0; i < fullText.length; i += chunkSize) {
+            if(!isGenerating) break;
+
+            currentText += fullText.substring(i, i + chunkSize);
+            markdownBody.innerHTML = formatAndSecureText(currentText) + '<span class="typing-cursor inline-block w-1.5 h-4 animate-pulse ml-1 align-middle" style="background: var(--accent);"></span>';
+
+            if (i % (chunkSize * 10) === 0) scrollToBottom();
+
+            await new Promise(r => setTimeout(r, 15));
+        }
+
+        markdownBody.innerHTML = formatAndSecureText(fullText);
+        applyEnhancements(msgDiv);
+        scrollToBottom();
+    }
+
+
+    // --- CORE LOGIC ---
+    window.editMessage = function(id) {
+        if(isGenerating) return;
+        const msgIndex = parseInt(id);
+        const session = chatSessions.find(s => s.id === activeSessionId);
+        if(!session) return;
+
+        ui.input.value = session.messages[msgIndex].parts[0].text;
+        ui.input.style.height = "auto";
+        ui.input.style.height = Math.min(ui.input.scrollHeight, 200) + "px";
+        ui.input.focus();
+    };
+
+    window.regenerateResponse = function(id) {
+        if(isGenerating) return;
+        const session = chatSessions.find(s => s.id === activeSessionId);
+        if(!session) return;
+
+        const msgIndex = parseInt(id);
+        if(msgIndex !== session.messages.length - 1) {
+            alert("Only the latest message can be regenerated.");
+            return;
+        }
+        const precedingUserMsg = session.messages[session.messages.length - 2];
+        if(precedingUserMsg && precedingUserMsg.imageCount) {
+            alert("Messages with images can't be regenerated. Please attach the image again.");
+            return;
+        }
+
+        session.messages.pop();
+        ui.messagesWrapper.removeChild(ui.messagesWrapper.lastChild);
+
+        const lastUserMsg = session.messages.pop();
+        ui.messagesWrapper.removeChild(ui.messagesWrapper.lastChild);
+        saveSessions();
+
+        ui.input.value = lastUserMsg.parts[0].text;
+        const stashedImages = pendingImages;
+        pendingImages = [];
+        ui.form.dispatchEvent(new Event("submit"));
+        pendingImages = stashedImages;
+    };
+
+    window.stopGeneration = function() {
+        if (currentAbortController) {
+            currentAbortController.abort();
+            ui.stopBtnContainer.classList.add('hidden');
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+            document.getElementById('header-orb').classList.remove('thinking');
+            isGenerating = false;
+            ui.sendBtn.disabled = false;
+        }
+    };
+
+    async function triggerSend(userText, opts = {}) {
+        const images = Array.isArray(opts.images) ? opts.images : [];
+        const audio = opts.audio || null;
+
+        if ((!userText && !audio) || isGenerating) return;
+
+        isGenerating = true;
+        ui.sendBtn.disabled = true;
+        ui.stopBtnContainer.classList.remove('hidden');
+        document.getElementById('header-orb').classList.add('thinking');
+        stopVoiceReply();
+
+        if(!activeSessionId) {
+            const newSession = {
+                id: 'session_' + Date.now(),
+                title: (userText || 'Voice message').substring(0, 30) + (userText.length > 30 ? '...' : ''),
+                messages: [],
+                updatedAt: Date.now()
+            };
+            chatSessions.unshift(newSession);
+            activeSessionId = newSession.id;
+            renderSidebar();
+        }
+
+        const session = chatSessions.find(s => s.id === activeSessionId);
+
+        if (!audio) {
+            const userMsgId = session.messages.length;
+            const userMsg = { role: "user", parts: [{ text: userText }] };
+            if (images.length) userMsg.imageCount = images.length;
+            session.messages.push(userMsg);
+            session.updatedAt = Date.now();
+            saveSessions();
+            const userDiv = appendMessage("user", userText, userMsgId);
+            if (images.length) decorateUserBubble(userDiv, images, images.length);
+        } else {
+            // Voice: the user bubble is added once the transcript comes back
+            ui.welcomeScreen.classList.add("hidden");
+            ui.messagesWrapper.classList.remove("hidden");
+        }
+
+        // While generating, ONLY "Thinking..." is shown (existing indicator).
+        ui.loadingIndicator.classList.remove("hidden");
+        ui.loadingIndicator.classList.add("flex");
+        scrollToBottom();
+
+        const slicedContents = session.messages
+            .slice(-CONTEXT_WINDOW_SIZE)
+            .map(({ role, parts }) => ({ role, parts }));
+        const userProfile = JSON.parse(localStorage.getItem(USER_PROFILE_KEY)) || {};
+
+        currentAbortController = new AbortController();
+
+        try {
+            const payload = {
+                contents: slicedContents,
+                userProfile: userProfile
+            };
+            if (images.length) payload.images = images.map(({ mimeType, data }) => ({ mimeType, data }));
+            if (audio) {
+                payload.audio = audio;
+                payload.voiceReply = true;
+            }
+
+            const response = await fetch(MODEL_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+                signal: currentAbortController.signal
+            });
+
+            if (!response.ok) {
+                const errData = await response.json().catch(()=>({}));
+                const httpError = new Error(errData.error || `Server Error (${response.status})`);
+                httpError.activity = Array.isArray(errData.activity) ? errData.activity : null;
+                throw httpError;
+            }
+
+            const result = await response.json();
+            const aiText = result?.candidates?.[0]?.content?.parts?.[0]?.text || result?.text;
+
+            if (!aiText) throw new Error("Invalid response received.");
+
+            const activity = Array.isArray(result.activity) ? result.activity : [];
+
+            if (audio) {
+                const heard = String(result.transcript || '').trim();
+                if (heard) {
+                    const heardId = session.messages.length;
+                    session.messages.push({ role: "user", parts: [{ text: heard }] });
+                    if (session.title === 'Voice message') {
+                        session.title = heard.substring(0, 30) + (heard.length > 30 ? '...' : '');
+                        renderSidebar();
+                    }
+                    appendMessage("user", heard, heardId);
+                }
+            }
+
+            const aiMsgId = session.messages.length;
+            const aiMsg = { role: "model", parts: [{ text: aiText }] };
+            if (activity.length) aiMsg.activity = activity;
+            session.messages.push(aiMsg);
+            session.updatedAt = Date.now();
+            saveSessions();
+
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+
+            // "Thinking..." is replaced by "✓ Show thinking" on this message
+            const newAiMsgDiv = appendMessage("model", "", aiMsgId, false, activity);
+            if (result.audio) playVoiceReply(result.audio);
+            await streamMessageEffect(newAiMsgDiv, aiText);
+
+        } catch (error) {
+            ui.loadingIndicator.classList.add("hidden");
+            ui.loadingIndicator.classList.remove("flex");
+
+            if (error.name === 'AbortError') {
+                appendMessage("model", "*Generation stopped by user.*");
+                if (audio) discardEmptySession(session);
+            } else {
+                let friendlyError = `**System Alert:** ${error.message}`;
+                if (error.message.includes('429')) friendlyError = "**Rate Limit Hit:** Server is currently busy. Please wait a moment.";
+                appendMessage("model", friendlyError, null, true, error.activity);
+
+                if (audio) {
+                    discardEmptySession(session);
+                } else {
+                    session.messages.pop();
+                    saveSessions();
+                }
+            }
+        } finally {
+            isGenerating = false;
+            ui.sendBtn.disabled = false;
+            ui.stopBtnContainer.classList.add('hidden');
+            document.getElementById('header-orb').classList.remove('thinking');
+            ui.input.focus();
+            currentAbortController = null;
+        }
+    }
+
+    // A voice request that fails before any message exists must not leave an empty chat behind
+    function discardEmptySession(session) {
+        if (!session || session.messages.length > 0) return;
+        chatSessions = chatSessions.filter(s => s.id !== session.id);
+        if (activeSessionId === session.id) activeSessionId = null;
+        saveSessions();
+        renderSidebar();
+    }
+
+    ui.form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        let text = ui.input.value.trim();
+        const images = pendingImages.slice();
+        if (!text && images.length) text = "What's in this image?";
+        ui.input.value = "";
+        ui.input.style.height = "auto";
+        const willSend = !isGenerating && text.length > 0;
+        triggerSend(text, { images });
+        if (willSend) clearPendingImages();
+    });
+
+    // =========================================================
+    // ACTIVITY STEPS
+    // Renders the structured event list returned by the backend.
+    // The frontend never invents steps - it only displays events
+    // (any type/title/description) so new backend features need no
+    // UI changes.
+    // =========================================================
+    function buildActivityBlock(activity) {
+        const events = activity.filter(e => e && typeof e.title === 'string');
+        const failed = !events.some(e => e.type === 'complete');
+        const panelId = 'activity_' + Math.random().toString(36).slice(2, 9);
+
+        const block = document.createElement('div');
+        block.className = 'activity-block';
+
+        const toggle = document.createElement('button');
+        toggle.type = 'button';
+        toggle.className = 'activity-toggle' + (failed ? ' is-failed' : '');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-controls', panelId);
+
+        const mark = document.createElement('span');
+        mark.className = 'activity-mark';
+        mark.textContent = failed ? '\u26A0' : '\u2713';
+
+        const label = document.createElement('span');
+        label.className = 'activity-label';
+        label.textContent = 'Show thinking';
+
+        const chevron = document.createElement('span');
+        chevron.className = 'activity-chevron';
+        chevron.textContent = '\u25BE';
+
+        toggle.append(mark, label, chevron);
+
+        const panel = document.createElement('div');
+        panel.className = 'activity-panel';
+        panel.id = panelId;
+        panel.hidden = true;
+
+        const heading = document.createElement('div');
+        heading.className = 'activity-panel-title';
+        heading.textContent = 'Steps';
+        panel.appendChild(heading);
+
+        const list = document.createElement('ol');
+        list.className = 'activity-list';
+
+        const glyphs = { info: '\u25CF', success: '\u2713', warning: '\u26A0', error: '\u26A0' };
+
+        events.forEach(evt => {
+            const status = glyphs[evt.status] ? evt.status : 'info';
+
+            const item = document.createElement('li');
+            item.className = 'activity-item status-' + status;
+
+            const dot = document.createElement('span');
+            dot.className = 'activity-dot';
+            dot.textContent = glyphs[status];
+
+            const text = document.createElement('div');
+            text.className = 'activity-text';
+
+            const title = document.createElement('div');
+            title.className = 'activity-title';
+            title.textContent = evt.title;
+            text.appendChild(title);
+
+            if (evt.description) {
+                const desc = document.createElement('div');
+                desc.className = 'activity-desc';
+                desc.textContent = evt.description;
+                text.appendChild(desc);
+            }
+
+            item.append(dot, text);
+            list.appendChild(item);
+        });
+
+        panel.appendChild(list);
+
+        toggle.addEventListener('click', () => {
+            const open = toggle.getAttribute('aria-expanded') === 'true';
+            toggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+            label.textContent = open ? 'Show thinking' : 'Hide thinking';
+            panel.hidden = open;
+            if (!open) scrollToBottom();
+        });
+
+        block.append(toggle, panel);
+        return block;
+    }
+
+    // =========================================================
+    // IMAGE ATTACHMENTS  (sent to the backend vision model)
+    // Images are downscaled in the browser and are NOT saved in
+    // localStorage (only an "image attached" marker is kept).
+    // =========================================================
+    const MAX_IMAGES = 3;
+    let pendingImages = [];
+
+    window.handleAttachClick = function() {
+        if (isGenerating) return;
+        if (pendingImages.length >= MAX_IMAGES) {
+            alert(`You can attach up to ${MAX_IMAGES} images.`);
+            return;
+        }
+        document.getElementById('image-input').click();
+    };
+
+    function fileToCompressedImage(file, maxSide = 1600) {
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+                const width = Math.max(1, Math.round(img.width * scale));
+                const height = Math.max(1, Math.round(img.height * scale));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+                URL.revokeObjectURL(url);
+
+                let quality = 0.85;
+                let dataUrl = canvas.toDataURL('image/jpeg', quality);
+                while (dataUrl.length > 1500000 && quality > 0.45) {
+                    quality -= 0.1;
+                    dataUrl = canvas.toDataURL('image/jpeg', quality);
+                }
+                resolve({ mimeType: 'image/jpeg', data: dataUrl.split(',')[1], previewUrl: dataUrl });
+            };
+            img.onerror = () => {
+                URL.revokeObjectURL(url);
+                reject(new Error('Unsupported image'));
+            };
+            img.src = url;
+        });
+    }
+
+    function renderPendingImages() {
+        const box = document.getElementById('attachment-preview');
+        box.innerHTML = '';
+
+        pendingImages.forEach((image, index) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'attach-thumb';
+
+            const el = document.createElement('img');
+            el.src = image.previewUrl;
+            el.alt = 'Attached image';
+
+            const remove = document.createElement('button');
+            remove.type = 'button';
+            remove.setAttribute('aria-label', 'Remove image');
+            remove.textContent = '\u00D7';
+            remove.addEventListener('click', () => {
+                pendingImages.splice(index, 1);
+                renderPendingImages();
+            });
+
+            thumb.append(el, remove);
+            box.appendChild(thumb);
+        });
+
+        const has = pendingImages.length > 0;
+        box.classList.toggle('hidden', !has);
+        box.classList.toggle('flex', has);
+        // An image alone is enough to send (a default question is used)
+        ui.input.required = !has;
+    }
+
+    function clearPendingImages() {
+        pendingImages = [];
+        renderPendingImages();
+    }
+
+    document.getElementById('image-input').addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files || []);
+        e.target.value = '';
+
+        for (const file of files) {
+            if (pendingImages.length >= MAX_IMAGES) break;
+            if (!file.type.startsWith('image/')) continue;
+            try {
+                pendingImages.push(await fileToCompressedImage(file));
+            } catch (err) {
+                alert("That image couldn't be read. Please try another one.");
+            }
+        }
+        renderPendingImages();
+    });
+
+    function decorateUserBubble(msgDiv, images, count) {
+        const bubble = msgDiv && msgDiv.querySelector('.bubble');
+        if (!bubble) return;
+
+        const row = document.createElement('div');
+        row.className = 'bubble-images';
+
+        if (images && images.length) {
+            images.forEach(image => {
+                const el = document.createElement('img');
+                el.src = image.previewUrl;
+                el.alt = 'Attached image';
+                row.appendChild(el);
+            });
+        } else {
+            const tag = document.createElement('div');
+            tag.className = 'bubble-image-tag';
+            tag.textContent = count > 1 ? `\uD83D\uDDBC ${count} images` : '\uD83D\uDDBC Image';
+            row.appendChild(tag);
+        }
+        bubble.insertBefore(row, bubble.firstChild);
+    }
+
+    // =========================================================
+    // VOICE  (record -> backend Whisper -> model -> Orpheus audio)
+    // =========================================================
+    const MAX_VOICE_MS = 60000;
+    const SILENT_WAV = 'data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YUAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA';
+    let voiceRecorder = null;
+    let voiceStream = null;
+    let voiceChunks = [];
+    let voiceTimer = null;
+    let voiceDiscard = false;
+    let voicePlayer = null;
+    let voiceQueueToken = 0;
+
+    function setVoiceStatus(title, subtitle) {
+        document.getElementById('voice-title').textContent = title;
+        document.getElementById('voice-subtitle').textContent = subtitle;
+    }
+
+    function setVoiceSendEnabled(enabled) {
+        document.getElementById('voice-send-btn').disabled = !enabled;
+    }
+
+    function stopVoiceStream() {
+        if (voiceStream) {
+            voiceStream.getTracks().forEach(t => t.stop());
+            voiceStream = null;
+        }
+    }
+
+    function pickRecorderMime() {
+        const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+        if (window.MediaRecorder && MediaRecorder.isTypeSupported) {
+            for (const mime of candidates) {
+                if (MediaRecorder.isTypeSupported(mime)) return mime;
+            }
+        }
+        return '';
+    }
+
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(String(reader.result).split(',')[1] || '');
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    // Playing a silent clip inside the tap handler "unlocks" audio for the later reply
+    function unlockVoicePlayer() {
+        try {
+            if (!voicePlayer) voicePlayer = new Audio();
+            voicePlayer.src = SILENT_WAV;
+            const p = voicePlayer.play();
+            if (p && p.catch) p.catch(() => {});
+        } catch (err) { /* ignore */ }
+    }
+
+    function stopVoiceReply() {
+        voiceQueueToken++;
+        if (voicePlayer) {
+            try { voicePlayer.pause(); } catch (err) { /* ignore */ }
+        }
+    }
+
+    async function playVoiceReply(audio) {
+        if (!audio || !Array.isArray(audio.chunks) || audio.chunks.length === 0) return;
+        const format = /^[a-z0-9]+$/.test(String(audio.format)) ? audio.format : 'wav';
+        if (!voicePlayer) voicePlayer = new Audio();
+        const token = ++voiceQueueToken;
+
+        for (const chunk of audio.chunks) {
+            if (token !== voiceQueueToken) return;
+            try {
+                await new Promise((resolve, reject) => {
+                    voicePlayer.onended = resolve;
+                    voicePlayer.onerror = reject;
+                    voicePlayer.src = `data:audio/${format};base64,${chunk}`;
+                    const p = voicePlayer.play();
+                    if (p && p.catch) p.catch(reject);
+                });
+            } catch (err) {
+                return; // playback blocked or failed: the text reply is still shown
+            }
+        }
+    }
+
+    async function startVoiceRecording() {
+        voiceDiscard = false;
+        voiceChunks = [];
+        setVoiceSendEnabled(false);
+        setVoiceStatus('Listening\u2026', "Speak naturally, I'm listening.");
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+            setVoiceStatus('Voice not supported', "This browser can't record audio here.");
+            return;
+        }
+
+        try {
+            voiceStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+            setVoiceStatus('Microphone blocked', 'Allow microphone access in your browser settings and try again.');
+            return;
+        }
+
+        // The overlay may have been closed while the permission prompt was open
+        if (document.getElementById('voice-overlay').classList.contains('hidden')) {
+            stopVoiceStream();
+            return;
+        }
+
+        const mimeType = pickRecorderMime();
+        voiceRecorder = mimeType ? new MediaRecorder(voiceStream, { mimeType }) : new MediaRecorder(voiceStream);
+        voiceRecorder.ondataavailable = (e) => { if (e.data && e.data.size) voiceChunks.push(e.data); };
+        voiceRecorder.onstop = finishVoiceRecording;
+        voiceRecorder.start();
+        voiceTimer = setTimeout(() => window.sendVoiceRecording(), MAX_VOICE_MS);
+        setVoiceSendEnabled(true);
+    }
+
+    async function finishVoiceRecording() {
+        clearTimeout(voiceTimer);
+        const mimeType = (voiceRecorder && voiceRecorder.mimeType) || 'audio/webm';
+        const chunks = voiceChunks;
+        const discard = voiceDiscard;
+
+        stopVoiceStream();
+        voiceRecorder = null;
+        voiceChunks = [];
+
+        if (discard) return;
+
+        const blob = new Blob(chunks, { type: mimeType });
+        document.getElementById('voice-overlay').classList.add('hidden');
+        document.getElementById('voice-overlay').classList.remove('flex');
+
+        if (blob.size < 1200) {
+            alert("That was too short. Please hold the mic a little longer and try again.");
+            return;
+        }
+
+        try {
+            const data = await blobToBase64(blob);
+            triggerSend('', { audio: { mimeType, data } });
+        } catch (err) {
+            alert("Couldn't read the recording. Please try again.");
+        }
+    }
+
+    window.openVoiceOverlay = function() {
+        if (isGenerating) return;
+        const overlay = document.getElementById('voice-overlay');
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+        startVoiceRecording();
+    };
+
+    window.sendVoiceRecording = function() {
+        if (voiceRecorder && voiceRecorder.state === 'recording') {
+            unlockVoicePlayer();
+            setVoiceSendEnabled(false);
+            setVoiceStatus('Sending\u2026', 'One moment.');
+            voiceRecorder.stop();
+        }
+    };
+
+    window.closeVoiceOverlay = function() {
+        voiceDiscard = true;
+        clearTimeout(voiceTimer);
+        if (voiceRecorder && voiceRecorder.state === 'recording') {
+            voiceRecorder.stop();
+        } else {
+            stopVoiceStream();
+        }
+        const overlay = document.getElementById('voice-overlay');
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+    };
+
+    // Boot
+    loadUserSettings();
+    renderSidebar();
+    if(activeSessionId) {
+        loadSession(activeSessionId);
+    }
+    </script>
+</body>
+</html>
